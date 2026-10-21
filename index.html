@@ -15,6 +15,15 @@
 *{box-sizing:border-box;margin:0}body{background:var(--bg);font-family:var(--body);color:var(--ink);font-size:14px}
 button{font-family:var(--body);cursor:pointer}input,select,textarea{font-family:var(--body);font-size:14px;color:var(--ink)}
 .mono{font-family:var(--mono)}
+/* loader */
+#loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:999}
+#loader .ring{width:34px;height:34px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--teal);animation:spin .8s linear infinite}
+#loader .word{font-family:var(--disp);font-weight:800;font-size:15px;color:var(--ink)}
+#loader .word i{font-style:normal;color:var(--teal)}
+#loader small{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loader.hide{opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+/* login */
 .login{min-height:100vh;display:grid;grid-template-columns:1fr 1.2fr}
 .login-l{background:var(--ink);color:#fff;padding:56px;display:flex;flex-direction:column;justify-content:space-between}
 .login-l h1{font-family:var(--disp);font-size:clamp(40px,5vw,64px);line-height:1.02;font-weight:800;letter-spacing:-.02em}
@@ -27,6 +36,7 @@ button{font-family:var(--body);cursor:pointer}input,select,textarea{font-family:
 .pcard .dot{width:14px;height:14px;border-radius:4px;background:var(--c,#04A29C);flex:none}
 .pcard b{display:block;font-size:15px}.pcard span{color:var(--muted);font-size:12px}
 .pcard.full{grid-column:1/-1}.pcard input{margin-left:auto;border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:170px}
+/* topbar */
 .topbar{background:var(--ink);color:#fff;display:flex;align-items:center;gap:18px;padding:10px 20px;position:sticky;top:0;z-index:40}
 .brand{font-family:var(--disp);font-weight:800;font-size:17px;letter-spacing:-.01em;white-space:nowrap}.brand i{font-style:normal;color:var(--teal)}
 .clockbox{margin:0 auto;text-align:center}.clockbox small{display:block;font-size:10px;letter-spacing:.14em;color:#8F979F;text-transform:uppercase}
@@ -40,6 +50,7 @@ button{font-family:var(--body);cursor:pointer}input,select,textarea{font-family:
 .npanel header button{border:0;background:0;color:var(--teal);font-size:12px;font-weight:600}
 .nitem{padding:11px 14px;border-bottom:1px solid var(--line);cursor:pointer;font-size:13px}.nitem:hover{background:#F6F8F8}.nitem.unread{background:#EDF7F6}
 .nitem b{display:block;font-size:13px}.nitem span{color:var(--muted)}.nitem time{font-family:var(--mono);font-size:10px;color:var(--gray)}
+/* bottoni / tabs */
 .btn{border-radius:9px;border:1px solid var(--line);background:#fff;padding:8px 14px;font-weight:600;font-size:13px;transition:.15s}
 .btn:hover{border-color:var(--ink)}.btn.pri{background:var(--teal);border-color:var(--teal);color:#fff}.btn.pri:hover{background:var(--teal-d)}
 .btn.dark{background:var(--ink);border-color:var(--ink);color:#fff}.btn.danger{background:#FDEBEC;border-color:#F5C2C4;color:var(--red)}
@@ -50,6 +61,7 @@ button{font-family:var(--body);cursor:pointer}input,select,textarea{font-family:
 .tab.on{background:#fff;color:var(--ink);box-shadow:0 -2px 0 var(--teal) inset}
 main{max-width:1500px;margin:0 auto;padding:0 20px 60px}
 .panel{background:#fff;border:1px solid var(--line);border-radius:0 12px 12px 12px;padding:20px}
+/* tray / tabelle / lane */
 .tray{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}.tray+.tray{margin-top:14px}
 .trayhead{background:var(--ink);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:8px;font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:.04em}
 .trayhead .cnt{font-family:var(--mono);font-size:11px;background:#3A4046;border-radius:99px;padding:2px 9px}
@@ -75,6 +87,7 @@ td.late{color:var(--red);font-weight:700}
 .lanehead .cnt{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted)}
 .lanebody{padding:12px;display:flex;flex-direction:column;gap:10px;min-height:140px;flex:1;max-height:70vh;overflow:auto}
 .lanebody.dz.over{background:#EDF7F6;outline:2px dashed var(--teal);outline-offset:-6px}
+/* card */
 .card{background:#fff;border:1px solid var(--line);border-left:4px solid var(--edge,var(--gray));border-radius:10px;padding:11px 12px;position:relative;transition:.16s}
 .card:hover{box-shadow:0 8px 20px rgba(35,39,43,.09);transform:translateY(-1px)}.card.dragging{opacity:.45}
 .card.gray{filter:grayscale(1);opacity:.85}.card.warn48{border-color:var(--amber);border-left-color:var(--amber);background:#FFF9EC;box-shadow:0 0 0 1px var(--amber)}
@@ -95,6 +108,7 @@ td.late{color:var(--red);font-weight:700}
 .cd{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--teal);background:#EDF7F6;border-radius:99px;padding:3px 9px}
 .cd.low{color:var(--red);background:#FDEBEC}
 .empty{color:var(--gray);font-size:12px;text-align:center;padding:18px 6px;border:1.5px dashed var(--line);border-radius:9px}
+/* operatore */
 .opwrap{display:grid;grid-template-columns:1fr 300px;gap:18px;margin-top:16px}
 .queue{background:#fff;border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:12px;padding:14px;margin-bottom:16px}
 .queue h3{font-family:var(--disp);font-size:14px;margin-bottom:10px}
@@ -118,6 +132,7 @@ td.late{color:var(--red);font-weight:700}
 .ophdr h2{font-family:var(--disp);font-size:24px;display:flex;align-items:center;gap:10px}.ophdr .dot{width:14px;height:14px;border-radius:4px}
 .badge-ro{background:#FFF4E5;color:#B36B00;border-radius:99px;padding:4px 12px;font-size:11px;font-weight:700;letter-spacing:.06em}
 .board{display:grid;grid-template-columns:340px 1fr;gap:18px;margin-top:16px}
+/* modal / toast */
 .overlay{position:fixed;inset:0;background:rgba(24,27,30,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
 .modal{background:#fff;border-radius:14px;width:min(680px,100%);max-height:86vh;overflow:auto;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
 .modal h3{font-family:var(--disp);font-size:18px;margin-bottom:4px}.modal .sub{color:var(--muted);font-size:12.5px;margin-bottom:14px}
@@ -137,6 +152,7 @@ td.late{color:var(--red);font-weight:700}
 .toast{background:var(--ink);color:#fff;border-radius:10px;padding:11px 16px;font-size:13px;box-shadow:0 12px 30px rgba(0,0,0,.25);animation:tin .25s;max-width:360px}
 .toast.warn{background:#8a6100}.toast.ok{background:#157A43}.toast.err{background:#A32E32}
 @keyframes tin{from{transform:translateY(8px);opacity:0}}
+/* stats */
 .statsgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
 .statcard{border:1px solid var(--line);border-radius:12px;padding:16px;border-top:4px solid var(--c,var(--teal))}
 .statcard b{font-family:var(--disp);font-size:15px}
@@ -153,6 +169,7 @@ details.archive summary{font-weight:600;cursor:pointer;font-size:13px}
 </style>
 </head>
 <body>
+<div id="loader"><div class="ring"></div><div class="word">PLANCIA<i>·</i>grafica</div><small>caricamento</small></div>
 <div id="app"></div><div id="modal-root"></div><div id="toasts"></div>
 <script>
 /* ============ CONFIG ============ */
@@ -272,7 +289,8 @@ async function sweepScaduti(){
  if(stale.length){await loadAll();route()}}
 
 /* ============ shell ============ */
-function route(){const r=S.prof.role;
+function hideLoader(){const l=document.getElementById('loader');if(l){l.classList.add('hide');setTimeout(()=>l.remove(),300)}}
+function route(){hideLoader();const r=S.prof.role;
  if(r==='admin')renderAdmin();else if(r==='owner')renderOwner();else renderOperator();
  requestAnimationFrame(bindDnD)}
 function topbar(center){const unread=S.notifs.filter(n=>!n.letto).length;
@@ -286,7 +304,7 @@ function toggleNotif(){S.notifOpen=!S.notifOpen;route()}
 async function markAllRead(){for(const n of S.notifs.filter(x=>!x.letto))await sb.from('notifications').update({letto:true}).eq('id',n.id);
  await loadAll();route()}
 async function readNotif(id){await sb.from('notifications').update({letto:true}).eq('id',id);S.notifOpen=false;await loadAll();route()}
-function renderLogin(){$('#app').innerHTML=`<div class="login">
+function renderLogin(){hideLoader();$('#app').innerHTML=`<div class="login">
  <div class="login-l"><div><h1>Chi entra<br>in <em>plancia</em>?</h1>
  <p>Smistamento ordini, task e avanzamento della squadra grafica. Scegli il tuo profilo per accedere.</p></div>
  <div class="mono" style="color:#5A6169;font-size:12px">ordini · task · stati · verifiche</div></div>
@@ -641,7 +659,7 @@ async function archiveMonth(){
  await loadAll();route();toast('Mese archiviato','ok')}
 
 /* ============ avvio ============ */
-boot();
+boot().catch(e=>{hideLoader();document.getElementById('app').innerHTML='<div style="padding:40px;font-family:var(--mono);color:#A32E32">Errore avvio: '+e.message+'</div>';});
 </script>
 </body>
 </html>
