@@ -195,17 +195,23 @@ const rel=iso=>{if(!iso)return'';const m=Math.round((Date.now()-new Date(iso))/6
 const monday=d=>{const x=new Date(d);x.setHours(0,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return x};
 const monthStart=d=>{const x=new Date(d);x.setHours(0,0,0,0);x.setDate(1);return x};
 const ageHours=iso=>iso?(Date.now()-new Date(iso))/36e5:0;
-function toast(msg,type=''){const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;$('#toasts').append(t);setTimeout(()=>t.remove(),4200)}
+function toast(msg,type=''){const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;$('#toasts').append(t);setTimeout(()=>t.remove(),5000)}
 function showModal(html){$('#modal-root').innerHTML=`<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="modal">${html}</div></div>`}
 function closeModal(){$('#modal-root').innerHTML=''}
 function applyLocal(id,patch){const o=S.orders.find(x=>x.id===id);if(o)Object.assign(o,patch)}
+/* modifica ottimistica: sposta subito a video, poi conferma col DB; se il DB rifiuta -> toast rosso + rollback */
 async function mutate(id,patch,msg,type){
- const{error}=await sb.from('orders').update(patch).eq('id',id);
- if(error){toast('Errore salvataggio: '+error.message,'err');return false}
+ const orig=S.orders.find(x=>x.id===id);
+ const prev=orig?Object.assign({},orig):null;
  applyLocal(id,patch);route();
- if(msg)toast(msg,type||'ok');
- loadAll();
- return true}
+ try{
+  const{data,error}=await sb.from('orders').update(patch).eq('id',id).select();
+  if(error){toast('Errore salvataggio: '+error.message,'err');if(prev)applyLocal(id,prev);route();return false}
+  if(!data||!data.length){toast('Il database ha rifiutato la modifica (permessi)','err');if(prev)applyLocal(id,prev);route();return false}
+  if(msg)toast(msg,type||'ok');
+  loadAll();
+  return true
+ }catch(e){toast('Errore: '+e.message,'err');if(prev)applyLocal(id,prev);route();return false}}
 function dataSig(){return JSON.stringify(S.orders)+'|'+JSON.stringify(S.tasks)+'|'+JSON.stringify(S.notifs)}
 async function softRefresh(){
  const before=dataSig();
@@ -516,13 +522,16 @@ async function setStatus(id,v){
   toast('Problema segnalato','warn')}}
 async function reactivate(id){await mutate(id,{status:'da_assegnare',grafico:null,assegnato_at:null,scadenza_tempo:false,motivo_rifiuto:null},'Ordine riattivato')}
 async function accept(id){await mutate(id,{status:'da_iniziare',accettato_at:new Date().toISOString()},'Ordine accettato')}
-function askReject(id){showModal(`<h3>Rifiuta ordine</h3><p class="sub">Indica la motivazione così Salvo può riassegnare con contesto.</p>
- <textarea id="rej" rows="3" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:10px"></textarea>
+function askReject(id){showModal(`<h3>Rifiuta ordine</h3><p class="sub">Indica la motivazione: è obbligatoria e la vedrà Salvo per riassegnare con contesto.</p>
+ <textarea id="rej" rows="3" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:10px" placeholder="Es. materiale mancante, cliente irreperibile…"></textarea>
  <div class="mfoot"><button class="btn" onclick="closeModal()">Annulla</button><button class="btn danger" onclick="reject('${id}')">Rifiuta</button></div>`)}
 async function reject(id){
- const m=$('#rej').value.trim();if(!m){toast('Serve una motivazione','err');return}
+ const el=$('#rej');
+ if(!el){toast('Finestra chiusa, riprova','err');return}
+ const m=el.value.trim();
+ if(!m){toast('Scrivi una motivazione per rifiutare','err');return}
  closeModal();
- const ok=await mutate(id,{status:'da_assegnare',grafico:null,assegnato_at:null,motivo_rifiuto:m},'Rifiutato e rimesso in coda');
+ const ok=await mutate(id,{status:'da_assegnare',grafico:null,assegnato_at:null,motivo_rifiuto:m},'Rifiutato: tornato in smistamento');
  if(ok)await sb.from('notifications').insert({titolo:'Ordine rifiutato',corpo:'Motivo: '+m,ref_order:id})}
 async function reopen(id){await mutate(id,{status:'da_assegnare',grafico:null,assegnato_at:null},'Riportato in smistamento')}
 async function verify(id,ok){
