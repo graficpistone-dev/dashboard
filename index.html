@@ -15,7 +15,6 @@
 *{box-sizing:border-box;margin:0}body{background:var(--bg);font-family:var(--body);color:var(--ink);font-size:14px}
 button{font-family:var(--body);cursor:pointer}input,select,textarea{font-family:var(--body);font-size:14px;color:var(--ink)}
 .mono{font-family:var(--mono)}
-/* loader */
 #loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:999}
 #loader .ring{width:34px;height:34px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--teal);animation:spin .8s linear infinite}
 #loader .word{font-family:var(--disp);font-weight:800;font-size:15px;color:var(--ink)}
@@ -23,7 +22,6 @@ button{font-family:var(--body);cursor:pointer}input,select,textarea{font-family:
 #loader small{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
 @keyframes spin{to{transform:rotate(360deg)}}
 #loader.hide{opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
-/* login */
 .login{min-height:100vh;display:grid;grid-template-columns:1fr 1.2fr}
 .login-l{background:var(--ink);color:#fff;padding:56px;display:flex;flex-direction:column;justify-content:space-between}
 .login-l h1{font-family:var(--disp);font-size:clamp(40px,5vw,64px);line-height:1.02;font-weight:800;letter-spacing:-.02em}
@@ -36,7 +34,6 @@ button{font-family:var(--body);cursor:pointer}input,select,textarea{font-family:
 .pcard .dot{width:14px;height:14px;border-radius:4px;background:var(--c,#04A29C);flex:none}
 .pcard b{display:block;font-size:15px}.pcard span{color:var(--muted);font-size:12px}
 .pcard.full{grid-column:1/-1}.pcard input{margin-left:auto;border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:170px}
-/* topbar */
 .topbar{background:var(--ink);color:#fff;display:flex;align-items:center;gap:18px;padding:10px 20px;position:sticky;top:0;z-index:40}
 .brand{font-family:var(--disp);font-weight:800;font-size:17px;letter-spacing:-.01em;white-space:nowrap}.brand i{font-style:normal;color:var(--teal)}
 .clockbox{margin:0 auto;text-align:center}.clockbox small{display:block;font-size:10px;letter-spacing:.14em;color:#8F979F;text-transform:uppercase}
@@ -50,7 +47,6 @@ button{font-family:var(--body);cursor:pointer}input,select,textarea{font-family:
 .npanel header button{border:0;background:0;color:var(--teal);font-size:12px;font-weight:600}
 .nitem{padding:11px 14px;border-bottom:1px solid var(--line);cursor:pointer;font-size:13px}.nitem:hover{background:#F6F8F8}.nitem.unread{background:#EDF7F6}
 .nitem b{display:block;font-size:13px}.nitem span{color:var(--muted)}.nitem time{font-family:var(--mono);font-size:10px;color:var(--gray)}
-/* bottoni / tabs */
 .btn{border-radius:9px;border:1px solid var(--line);background:#fff;padding:8px 14px;font-weight:600;font-size:13px;transition:.15s}
 .btn:hover{border-color:var(--ink)}.btn.pri{background:var(--teal);border-color:var(--teal);color:#fff}.btn.pri:hover{background:var(--teal-d)}
 .btn.dark{background:var(--ink);border-color:var(--ink);color:#fff}.btn.danger{background:#FDEBEC;border-color:#F5C2C4;color:var(--red)}
@@ -61,7 +57,6 @@ button{font-family:var(--body);cursor:pointer}input,select,textarea{font-family:
 .tab.on{background:#fff;color:var(--ink);box-shadow:0 -2px 0 var(--teal) inset}
 main{max-width:1500px;margin:0 auto;padding:0 20px 60px}
 .panel{background:#fff;border:1px solid var(--line);border-radius:0 12px 12px 12px;padding:20px}
-/* tray / tabelle / lane */
 .tray{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}.tray+.tray{margin-top:14px}
 .trayhead{background:var(--ink);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:8px;font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:.04em}
 .trayhead .cnt{font-family:var(--mono);font-size:11px;background:#3A4046;border-radius:99px;padding:2px 9px}
@@ -87,7 +82,6 @@ td.late{color:var(--red);font-weight:700}
 .lanehead .cnt{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted)}
 .lanebody{padding:12px;display:flex;flex-direction:column;gap:10px;min-height:140px;flex:1;max-height:70vh;overflow:auto}
 .lanebody.dz.over{background:#EDF7F6;outline:2px dashed var(--teal);outline-offset:-6px}
-/* card */
 .card{background:#fff;border:1px solid var(--line);border-left:4px solid var(--edge,var(--gray));border-radius:10px;padding:11px 12px;position:relative;transition:.16s}
 .card:hover{box-shadow:0 8px 20px rgba(35,39,43,.09);transform:translateY(-1px)}.card.dragging{opacity:.45}
 .card.gray{filter:grayscale(1);opacity:.85}.card.warn48{border-color:var(--amber);border-left-color:var(--amber);background:#FFF9EC;box-shadow:0 0 0 1px var(--amber)}
@@ -108,7 +102,6 @@ td.late{color:var(--red);font-weight:700}
 .cd{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--teal);background:#EDF7F6;border-radius:99px;padding:3px 9px}
 .cd.low{color:var(--red);background:#FDEBEC}
 .empty{color:var(--gray);font-size:12px;text-align:center;padding:18px 6px;border:1.5px dashed var(--line);border-radius:9px}
-/* operatore */
 .opwrap{display:grid;grid-template-columns:1fr 300px;gap:18px;margin-top:16px}
 .queue{background:#fff;border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:12px;padding:14px;margin-bottom:16px}
 .queue h3{font-family:var(--disp);font-size:14px;margin-bottom:10px}
@@ -132,7 +125,6 @@ td.late{color:var(--red);font-weight:700}
 .ophdr h2{font-family:var(--disp);font-size:24px;display:flex;align-items:center;gap:10px}.ophdr .dot{width:14px;height:14px;border-radius:4px}
 .badge-ro{background:#FFF4E5;color:#B36B00;border-radius:99px;padding:4px 12px;font-size:11px;font-weight:700;letter-spacing:.06em}
 .board{display:grid;grid-template-columns:340px 1fr;gap:18px;margin-top:16px}
-/* modal / toast */
 .overlay{position:fixed;inset:0;background:rgba(24,27,30,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
 .modal{background:#fff;border-radius:14px;width:min(680px,100%);max-height:86vh;overflow:auto;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
 .modal h3{font-family:var(--disp);font-size:18px;margin-bottom:4px}.modal .sub{color:var(--muted);font-size:12.5px;margin-bottom:14px}
@@ -152,7 +144,6 @@ td.late{color:var(--red);font-weight:700}
 .toast{background:var(--ink);color:#fff;border-radius:10px;padding:11px 16px;font-size:13px;box-shadow:0 12px 30px rgba(0,0,0,.25);animation:tin .25s;max-width:360px}
 .toast.warn{background:#8a6100}.toast.ok{background:#157A43}.toast.err{background:#A32E32}
 @keyframes tin{from{transform:translateY(8px);opacity:0}}
-/* stats */
 .statsgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
 .statcard{border:1px solid var(--line);border-radius:12px;padding:16px;border-top:4px solid var(--c,var(--teal))}
 .statcard b{font-family:var(--disp);font-size:15px}
@@ -207,6 +198,19 @@ const ageHours=iso=>iso?(Date.now()-new Date(iso))/36e5:0;
 function toast(msg,type=''){const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;$('#toasts').append(t);setTimeout(()=>t.remove(),4200)}
 function showModal(html){$('#modal-root').innerHTML=`<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="modal">${html}</div></div>`}
 function closeModal(){$('#modal-root').innerHTML=''}
+function applyLocal(id,patch){const o=S.orders.find(x=>x.id===id);if(o)Object.assign(o,patch)}
+async function mutate(id,patch,msg,type){
+ const{error}=await sb.from('orders').update(patch).eq('id',id);
+ if(error){toast('Errore salvataggio: '+error.message,'err');return false}
+ applyLocal(id,patch);route();
+ if(msg)toast(msg,type||'ok');
+ loadAll();
+ return true}
+function dataSig(){return JSON.stringify(S.orders)+'|'+JSON.stringify(S.tasks)+'|'+JSON.stringify(S.notifs)}
+async function softRefresh(){
+ const before=dataSig();
+ await loadAll();
+ if(before!==dataSig()&&!document.querySelector('.overlay'))route()}
 
 /* ============ CSV ============ */
 function parseItaDate(s){if(!s)return null;const m=String(s).trim().match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
@@ -261,7 +265,8 @@ async function boot(){
  if(!session){renderLogin();return}
  const{data:pr}=await sb.from('profiles').select('*').eq('id',session.user.id).maybeSingle();
  if(!pr){toast('Profilo mancante: esegui il seed degli utenti','err');await sb.auth.signOut();renderLogin();return}
- S.prof=pr;await loadAll();subscribeRealtime();sweepScaduti();setInterval(sweepScaduti,60000);route()}
+ S.prof=pr;await loadAll();subscribeRealtime();sweepScaduti();
+ setInterval(sweepScaduti,60000);setInterval(softRefresh,15000);route()}
 async function loadAll(){
  const[p,o,t,m]=await Promise.all([
   sb.from('profiles').select('*').order('display_name'),
@@ -278,9 +283,9 @@ async function loadAll(){
   const a=await sb.from('stats_archive').select('*').order('creato_il',{ascending:false});
   S.archive=a.data||[]}}
 function subscribeRealtime(){sb.channel('db')
- .on('postgres_changes',{event:'*',schema:'public',table:'orders'},()=>loadAll().then(route))
- .on('postgres_changes',{event:'*',schema:'public',table:'tasks'},()=>loadAll().then(route))
- .on('postgres_changes',{event:'*',schema:'public',table:'notifications'},async()=>{await loadAll();if(S.prof&&S.prof.role==='admin'){route();toast('Nuova notifica')}})
+ .on('postgres_changes',{event:'*',schema:'public',table:'orders'},()=>softRefresh())
+ .on('postgres_changes',{event:'*',schema:'public',table:'tasks'},()=>softRefresh())
+ .on('postgres_changes',{event:'*',schema:'public',table:'notifications'},()=>softRefresh())
  .subscribe()}
 async function sweepScaduti(){
  const now=Date.now();
@@ -488,15 +493,15 @@ async function handleDrop(target,id){
   const col=target.split(':')[1];if(!STATI[col])return;
   const patch={status:col};
   if(col==='completato'&&!o.completato_at)patch.completato_at=new Date().toISOString();
-  await sb.from('orders').update(patch).eq('id',id)}
+  await mutate(id,patch,'Aggiornato')}
  else if(S.prof.role==='admin'){
-  if(target==='pool'){await sb.from('orders').update({status:'da_assegnare',grafico:null,assegnato_at:null}).eq('id',id)}
+  if(target==='pool'){await mutate(id,{status:'da_assegnare',grafico:null,assegnato_at:null},'Rimesso in smistamento')}
   else if(target.startsWith('lane:')){
    const g=target.split(':')[1];
    if(o.status==='da_assegnare'||o.status==='problema'){
-    await sb.from('orders').update({status:'in_accettazione',grafico:g,assegnato_at:new Date().toISOString(),scadenza_tempo:false,motivo_rifiuto:null}).eq('id',id)}
-   else{await sb.from('orders').update({grafico:g}).eq('id',id)}}}
- await loadAll();route();toast('Aggiornato','ok')}
+    await mutate(id,{status:'in_accettazione',grafico:g,assegnato_at:new Date().toISOString(),scadenza_tempo:false,motivo_rifiuto:null},'Assegnato a '+opName(g))}
+   else{await mutate(id,{grafico:g},'Assegnato a '+opName(g))}}}
+ }
 
 /* ============ azioni ordini ============ */
 async function setStatus(id,v){
@@ -506,39 +511,27 @@ async function setStatus(id,v){
  const patch={status:v,esito_verifica:null};
  if(v==='da_assegnare'){patch.grafico=null;patch.assegnato_at=null;patch.motivo_rifiuto=null;patch.scadenza_tempo=false}
  if(v==='completato'&&!o.completato_at){patch.completato_at=new Date().toISOString()}
- const{error}=await sb.from('orders').update(patch).eq('id',id);
- if(error){toast(error.message,'err');return}
- if(v==='problema'){await sb.from('notifications').insert({titolo:'⚠ Problema ordine #'+o.numero,corpo:o.cliente+' — segnalato da '+S.prof.display_name,ref_order:id})}
- await loadAll();route()}
-async function reactivate(id){
- await sb.from('orders').update({status:'da_assegnare',grafico:null,assegnato_at:null,scadenza_tempo:false,motivo_rifiuto:null}).eq('id',id);
- await loadAll();route();toast('Ordine riattivato','ok')}
-async function accept(id){
- await sb.from('orders').update({status:'da_iniziare',accettato_at:new Date().toISOString()}).eq('id',id);
- await loadAll();route();toast('Ordine accettato','ok')}
+ const ok=await mutate(id,patch,null);
+ if(ok&&v==='problema'){await sb.from('notifications').insert({titolo:'⚠ Problema ordine #'+o.numero,corpo:o.cliente+' — segnalato da '+S.prof.display_name,ref_order:id});
+  toast('Problema segnalato','warn')}}
+async function reactivate(id){await mutate(id,{status:'da_assegnare',grafico:null,assegnato_at:null,scadenza_tempo:false,motivo_rifiuto:null},'Ordine riattivato')}
+async function accept(id){await mutate(id,{status:'da_iniziare',accettato_at:new Date().toISOString()},'Ordine accettato')}
 function askReject(id){showModal(`<h3>Rifiuta ordine</h3><p class="sub">Indica la motivazione così Salvo può riassegnare con contesto.</p>
  <textarea id="rej" rows="3" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:10px"></textarea>
  <div class="mfoot"><button class="btn" onclick="closeModal()">Annulla</button><button class="btn danger" onclick="reject('${id}')">Rifiuta</button></div>`)}
 async function reject(id){
  const m=$('#rej').value.trim();if(!m){toast('Serve una motivazione','err');return}
- await sb.from('orders').update({status:'da_assegnare',grafico:null,assegnato_at:null,motivo_rifiuto:m}).eq('id',id);
- await sb.from('notifications').insert({titolo:'Ordine rifiutato',corpo:'Motivo: '+m,ref_order:id});
- closeModal();await loadAll();route();toast('Rifiutato e rimesso in coda')}
-async function reopen(id){
- await sb.from('orders').update({status:'da_assegnare',grafico:null,assegnato_at:null}).eq('id',id);
- await loadAll();route();toast('Riportato in smistamento')}
+ closeModal();
+ const ok=await mutate(id,{status:'da_assegnare',grafico:null,assegnato_at:null,motivo_rifiuto:m},'Rifiutato e rimesso in coda');
+ if(ok)await sb.from('notifications').insert({titolo:'Ordine rifiutato',corpo:'Motivo: '+m,ref_order:id})}
+async function reopen(id){await mutate(id,{status:'da_assegnare',grafico:null,assegnato_at:null},'Riportato in smistamento')}
 async function verify(id,ok){
  const o=S.orders.find(x=>x.id===id);
- if(ok){
-  const{error}=await sb.from('orders').update({status:'verificato_ok',esito_verifica:'ok'}).eq('id',id);
-  if(error){toast(error.message,'err');return}
-  toast('Contrassegnato OK','ok')}
+ if(ok){await mutate(id,{status:'verificato_ok',esito_verifica:'ok'},'Contrassegnato OK')}
  else{
-  const{error}=await sb.from('orders').update({status:'problema',esito_verifica:'problemi'}).eq('id',id);
-  if(error){toast(error.message,'err');return}
-  await sb.from('notifications').insert({titolo:'⚠ Problema ordine #'+o.numero,corpo:o.cliente+' — verifica richiesta da '+S.prof.display_name,ref_order:id});
-  toast('Problema segnalato a Salvo','warn')}
- await loadAll();route()}
+  const done=await mutate(id,{status:'problema',esito_verifica:'problemi'},null);
+  if(done){await sb.from('notifications').insert({titolo:'⚠ Problema ordine #'+o.numero,corpo:o.cliente+' — verifica richiesta da '+S.prof.display_name,ref_order:id});
+   toast('Problema segnalato a Salvo','warn')}}}
 async function showLog(id){
  const o=S.orders.find(x=>x.id===id);
  const{data:ev}=await sb.from('order_events').select('*').eq('order_id',id).order('creato_il',{ascending:false}).limit(10);
