@@ -371,7 +371,7 @@ function adminTasks(){const pub=S.tasks.filter(t=>!t.privata);
   <button class="btn pri" onclick="addTask()">+ Assegna task</button></div>
   ${operators().map(op=>{const items=pub.filter(t=>t.grafico===op.id);
    return `<h3 style="margin:18px 0 6px;font-family:var(--disp)">${esc(op.display_name)} · ${items.length}</h3>
-   ${items.length?items.map(taskItem).join(''):'<div class="empty">Nessuna task</div>'}`).join('')}</div>`}
+   ${items.length?items.map(taskItem).join(''):'<div class="empty">Nessuna task</div>'}`;}).join('')}</div>`}
 function taskItem(t){const dot=t.stato;
  return `<div class="titem ${t.stato}"><span class="st-dot"></span><div style="flex:1"><b>${esc(t.titolo)}</b>
   ${t.descrizione?`<small>${esc(t.descrizione)}</small>`:''}${t.motivo?`<small class="mot">Motivo: ${esc(t.motivo)}</small>`:''}</div>
