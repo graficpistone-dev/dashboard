@@ -199,7 +199,6 @@ function toast(msg,type=''){const t=document.createElement('div');t.className='t
 function showModal(html){$('#modal-root').innerHTML=`<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="modal">${html}</div></div>`}
 function closeModal(){$('#modal-root').innerHTML=''}
 function applyLocal(id,patch){const o=S.orders.find(x=>x.id===id);if(o)Object.assign(o,patch)}
-/* modifica ottimistica: sposta subito a video, poi conferma col DB; se il DB rifiuta -> toast rosso + rollback */
 async function mutate(id,patch,msg,type){
  const orig=S.orders.find(x=>x.id===id);
  const prev=orig?Object.assign({},orig):null;
@@ -212,6 +211,18 @@ async function mutate(id,patch,msg,type){
   loadAll();
   return true
  }catch(e){toast('Errore: '+e.message,'err');if(prev)applyLocal(id,prev);route();return false}}
+/* rilascio in coda via funzione server-side (bypassa RLS, autorizzazione interna) */
+async function releaseOrder(id,opt){
+ opt=opt||{};
+ const orig=S.orders.find(x=>x.id===id);
+ const prev=orig?Object.assign({},orig):null;
+ applyLocal(id,{status:'da_assegnare',grafico:null,assegnato_at:null,scadenza_tempo:!!opt.scadenza,motivo_rifiuto:opt.motivo||null});
+ route();
+ const{error}=await sb.rpc('release_order',{p_id:id,p_motivo:opt.motivo||null,p_scadenza:!!opt.scadenza});
+ if(error){toast('Errore: '+error.message,'err');if(prev)applyLocal(id,prev);route();return false}
+ if(opt.msg)toast(opt.msg,'ok');
+ loadAll();
+ return true}
 function dataSig(){return JSON.stringify(S.orders)+'|'+JSON.stringify(S.tasks)+'|'+JSON.stringify(S.notifs)}
 async function softRefresh(){
  const before=dataSig();
@@ -296,7 +307,7 @@ function subscribeRealtime(){sb.channel('db')
 async function sweepScaduti(){
  const now=Date.now();
  const stale=S.orders.filter(o=>o.status==='in_accettazione'&&o.assegnato_at&&now-new Date(o.assegnato_at)>ACC_MIN*60000);
- for(const o of stale){await sb.from('orders').update({status:'da_assegnare',grafico:null,assegnato_at:null,scadenza_tempo:true}).eq('id',o.id)}
+ for(const o of stale){await sb.rpc('release_order',{p_id:o.id,p_scadenza:true})}
  if(stale.length){await loadAll();route()}}
 
 /* ============ shell ============ */
@@ -501,7 +512,7 @@ async function handleDrop(target,id){
   if(col==='completato'&&!o.completato_at)patch.completato_at=new Date().toISOString();
   await mutate(id,patch,'Aggiornato')}
  else if(S.prof.role==='admin'){
-  if(target==='pool'){await mutate(id,{status:'da_assegnare',grafico:null,assegnato_at:null},'Rimesso in smistamento')}
+  if(target==='pool'){await releaseOrder(id,{msg:'Rimesso in smistamento'})}
   else if(target.startsWith('lane:')){
    const g=target.split(':')[1];
    if(o.status==='da_assegnare'||o.status==='problema'){
@@ -514,8 +525,8 @@ async function setStatus(id,v){
  if(!v)return;
  const o=S.orders.find(x=>x.id===id);
  if(v==='annullato'&&!confirm('Annullare questo ordine? Resterà nel vassoio Annullati.'))return;
+ if(v==='da_assegnare'){await releaseOrder(id,{msg:'Rimesso in smistamento'});return}
  const patch={status:v,esito_verifica:null};
- if(v==='da_assegnare'){patch.grafico=null;patch.assegnato_at=null;patch.motivo_rifiuto=null;patch.scadenza_tempo=false}
  if(v==='completato'&&!o.completato_at){patch.completato_at=new Date().toISOString()}
  const ok=await mutate(id,patch,null);
  if(ok&&v==='problema'){await sb.from('notifications').insert({titolo:'⚠ Problema ordine #'+o.numero,corpo:o.cliente+' — segnalato da '+S.prof.display_name,ref_order:id});
@@ -531,9 +542,9 @@ async function reject(id){
  const m=el.value.trim();
  if(!m){toast('Scrivi una motivazione per rifiutare','err');return}
  closeModal();
- const ok=await mutate(id,{status:'da_assegnare',grafico:null,assegnato_at:null,motivo_rifiuto:m},'Rifiutato: tornato in smistamento');
+ const ok=await releaseOrder(id,{motivo:m,msg:'Rifiutato: tornato in smistamento'});
  if(ok)await sb.from('notifications').insert({titolo:'Ordine rifiutato',corpo:'Motivo: '+m,ref_order:id})}
-async function reopen(id){await mutate(id,{status:'da_assegnare',grafico:null,assegnato_at:null},'Riportato in smistamento')}
+async function reopen(id){await releaseOrder(id,{msg:'Riportato in smistamento'})}
 async function verify(id,ok){
  const o=S.orders.find(x=>x.id===id);
  if(ok){await mutate(id,{status:'verificato_ok',esito_verifica:'ok'},'Contrassegnato OK')}
