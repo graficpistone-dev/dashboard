@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Plancia · Gestione grafica</title>
+<title>Dashboard Grafica</title>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
@@ -21,14 +21,17 @@ button{font-family:var(--body);cursor:pointer}input,select,textarea{font-family:
 #loader small{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
 @keyframes spin{to{transform:rotate(360deg)}}
 #loader.hide{opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
-.login{min-height:100vh;display:grid;grid-template-columns:1fr 1.2fr}
-.login-l{background:var(--ink);color:#fff;padding:56px;display:flex;flex-direction:column;justify-content:space-between}
-.login-l h1{font-family:var(--disp);font-size:clamp(40px,5vw,64px);line-height:1.02;font-weight:800;letter-spacing:-.02em}
-.login-l h1 em{font-style:normal;color:var(--teal)}.login-l p{color:#AEB4BC;max-width:36ch;margin-top:14px}
-.login-r{display:flex;align-items:center;justify-content:center;padding:40px}
-.pick{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:min(560px,100%)}
-.pick h2{grid-column:1/-1;font-family:var(--disp);font-size:22px}
-.pcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;text-align:left;display:flex;gap:12px;align-items:center;transition:.18s;width:100%}
+.loginwrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:30px}
+.loginbox{width:min(660px,100%);text-align:center}
+.loginbox h1{font-family:var(--disp);font-size:clamp(34px,5vw,52px);font-weight:800;letter-spacing:-.02em}
+.loginbox h1 em{font-style:normal;color:var(--teal)}
+.loginbox .sub{color:var(--muted);margin:8px 0 18px}
+.livebar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:0 0 22px}
+.lb{background:#fff;border:1px solid var(--line);border-radius:99px;padding:6px 14px;font-size:12px;color:var(--muted)}
+.lb b{color:var(--ink);font-family:var(--mono);font-size:13px}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left}
+.pick h2{grid-column:1/-1;font-family:var(--disp);font-size:16px;color:var(--muted);font-weight:600}
+.pcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;text-align:left;display:flex;gap:12px;align-items:center;transition:.18s;width:100%}
 .pcard:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(35,39,43,.10);border-color:var(--ink)}
 .pcard .dot{width:14px;height:14px;border-radius:4px;background:var(--c,#04A29C);flex:none}
 .pcard b{display:block;font-size:15px}.pcard span{color:var(--muted);font-size:12px}
@@ -49,88 +52,96 @@ button{font-family:var(--body);cursor:pointer}input,select,textarea{font-family:
 .btn{border-radius:9px;border:1px solid var(--line);background:#fff;padding:8px 14px;font-weight:600;font-size:13px;transition:.15s}
 .btn:hover{border-color:var(--ink)}.btn.pri{background:var(--teal);border-color:var(--teal);color:#fff}.btn.pri:hover{background:var(--teal-d)}
 .btn.dark{background:var(--ink);border-color:var(--ink);color:#fff}.btn.danger{background:#FDEBEC;border-color:#F5C2C4;color:var(--red)}
-.btn.ok{background:#E8F6EE;border-color:#BFE5CE;color:#157A43}.btn.sm{padding:5px 10px;font-size:12px;border-radius:7px}
+.btn.ok{background:#E8F6EE;border-color:#BFE5CE;color:#157A43}.btn.sm{padding:4px 9px;font-size:11.5px;border-radius:7px}
 .btn.ghost{background:transparent;color:#C9CED4;border-color:#3A4046}.btn.ghost:hover{color:#fff;border-color:#fff}
-.tabs{display:flex;gap:6px;padding:14px 20px 0;max-width:1600px;margin:0 auto}
+.tabs{display:flex;gap:6px;padding:14px 20px 0;max-width:1760px;margin:0 auto}
 .tab{border:0;background:0;padding:9px 16px;border-radius:9px 9px 0 0;font-weight:600;color:var(--muted);font-size:13px}
 .tab.on{background:#fff;color:var(--ink);box-shadow:0 -2px 0 var(--teal) inset}
-main{max-width:1600px;margin:0 auto;padding:0 20px 60px}
+main{max-width:1760px;margin:0 auto;padding:0 20px 60px}
 .panel{background:#fff;border:1px solid var(--line);border-radius:0 12px 12px 12px;padding:20px}
-.adminwrap{display:grid;grid-template-columns:300px 1fr;gap:16px;margin-top:16px}
-.taskside{position:sticky;top:64px;align-self:start;max-height:calc(100vh - 90px);overflow:auto;display:flex;flex-direction:column;gap:12px}
-.tside-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px}
-.tside-card h3{font-family:var(--disp);font-size:13px;margin-bottom:8px}
-.tfilters{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
-.tfilters button{border:1px solid var(--line);background:#fff;border-radius:99px;padding:3px 10px;font-size:11px;font-weight:600;color:var(--muted)}
+.adminwrap{display:grid;grid-template-columns:232px minmax(0,1fr);gap:14px;margin-top:16px}
+.taskside{position:sticky;top:64px;align-self:start;max-height:calc(100vh - 90px);overflow:auto;display:flex;flex-direction:column;gap:10px}
+.tside-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;font-size:12.5px}
+.tside-card h3{font-family:var(--disp);font-size:12.5px;margin-bottom:8px}
+.tfilters{display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap}
+.tfilters button{border:1px solid var(--line);background:#fff;border-radius:99px;padding:3px 9px;font-size:10.5px;font-weight:600;color:var(--muted)}
 .tfilters button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.trow2{border-top:1px solid var(--line);padding:8px 0;font-size:12.5px}
+.trow2{border-top:1px solid var(--line);padding:7px 0}
 .trow2:first-of-type{border-top:0}.trow2.done{opacity:.55}
 .trow2 .tt{font-weight:600;display:flex;gap:6px;align-items:center}
 .trow2 small{color:var(--muted);display:block;margin-top:2px}
 .trow2 .acts{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap}
+.postit{border-radius:8px;padding:8px 9px;margin-top:8px;border:1px solid rgba(0,0,0,.08);box-shadow:0 1px 2px rgba(0,0,0,.06);font-size:12.5px}
+.postit:first-of-type{margin-top:0}
+.postit .tt{font-weight:600;display:flex;gap:6px;align-items:center}
+.postit small{color:#5A5140;display:block;margin-top:2px}
+.postit .acts{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
 .thumb{width:34px;height:34px;object-fit:cover;border-radius:6px;border:1px solid var(--line)}
+.swatches{display:flex;gap:6px;align-items:center}
+.swatches button{width:22px;height:22px;border-radius:6px;border:1px solid rgba(0,0,0,.15)}
+.swatches button.on{outline:2px solid var(--ink)}
 .tray{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}.tray+.tray{margin-top:14px}
-.trayhead{background:var(--ink);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:8px;font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:.04em}
-.trayhead .cnt{font-family:var(--mono);font-size:11px;background:#3A4046;border-radius:99px;padding:2px 9px}
+.trayhead{background:var(--ink);color:#fff;padding:9px 14px;display:flex;align-items:center;gap:8px;font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:.04em}
+.trayhead .cnt{font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.22);border-radius:99px;padding:2px 9px}
 .trayhead.alert{background:#7A2E31}.trayhead.muted{background:#4A5158}.trayhead.prod{background:#0E5E6F}.trayhead.sosp{background:#7A5C00}
 .headtools{margin-left:auto;display:flex;gap:12px;align-items:center}
 .switchlabel{font-size:11px;color:#C9CED4;display:flex;gap:6px;align-items:center;cursor:pointer}
-.traybody{padding:12px;min-height:60px;max-height:70vh;overflow:auto}
+.traybody{padding:8px;min-height:44px;max-height:46vh;overflow:auto}
+.traybody.tall{max-height:64vh}
 .traybody.dz.over,.tablewrap.dz.over{background:#EDF7F6;outline:2px dashed var(--teal);outline-offset:-6px}
-.tablewrap{overflow:auto;max-height:62vh}
-.ptable{width:100%;border-collapse:collapse;font-size:12.5px}
-.ptable th{background:#F6F7F8;text-align:left;padding:8px 10px;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);position:sticky;top:0}
-.ptable td{padding:8px 10px;border-top:1px solid var(--line);vertical-align:middle}
+.tablewrap{overflow:auto;max-height:64vh}
+.ptable{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+.ptable th{background:#F6F7F8;text-align:left;padding:5px 8px;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);position:sticky;top:0;white-space:nowrap;overflow:hidden}
+.ptable td{padding:4px 8px;border-top:1px solid var(--line);vertical-align:middle;overflow:hidden}
 .ptable tbody tr{cursor:grab;background:#fff}.ptable tbody tr:hover{background:#F6F8F8}.ptable tbody tr.dragging{opacity:.45}
 .ptable tbody tr.ro{cursor:default}
-.mutedcell{color:var(--muted);max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ptable tbody tr.grayrow{opacity:.6}
+.ptable tbody tr.warnrow{background:#FFF9EC;box-shadow:inset 0 0 0 1px var(--amber)}
+td.nowrap{white-space:nowrap}
+.clicell{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.25}
+.stcell{white-space:nowrap}.stdot{display:inline-block;width:8px;height:8px;border-radius:3px;margin-right:5px}
+.mutedcell{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 td.late{color:var(--red);font-weight:700}
 td.ic{white-space:nowrap}
 .star{color:var(--giallo)}
-.lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
-.lane{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.lanehead{padding:10px 14px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--line)}
-.lanehead .dot{width:12px;height:12px;border-radius:4px}.lanehead b{font-family:var(--disp);font-size:14px}
-.lanehead .cnt{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.lanes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}
+.lane{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;min-width:0}
+.lanehead{padding:9px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line)}
+.lanehead .dot{width:12px;height:12px;border-radius:4px;flex:none}.lanehead b{font-family:var(--disp);font-size:13.5px}
+.lanehead .cnt{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
 .lanebody{max-height:60vh;overflow:auto}
 .lanebody.dz.over{background:#EDF7F6;outline:2px dashed var(--teal);outline-offset:-6px}
+.lanebody .ptable th{position:static}
 .info{border:0;background:0;color:#9AA0A6;font-size:13px;font-weight:600;border-radius:50%;width:22px;height:22px;line-height:1;opacity:.8}
 .info:hover{opacity:1;color:var(--teal)}
-.chip{border-radius:5px;padding:2px 7px;font-size:10.5px;font-weight:600;background:#F0F2F3;color:#4A5158}
+.chip{border-radius:5px;padding:2px 7px;font-size:10.5px;font-weight:600;background:#F0F2F3;color:#4A5158;white-space:nowrap}
 .chip.st{color:#fff}.chip.sett{text-transform:uppercase;letter-spacing:.05em;font-size:9.5px}
 .flags{margin-top:4px;display:flex;flex-direction:column;gap:3px}
-.flag{font-size:11px;font-weight:600;border-radius:6px;padding:3px 8px;display:inline-block}
+.flag{font-size:10.5px;font-weight:600;border-radius:6px;padding:2px 7px;display:inline-block;white-space:nowrap}
 .flag.tempo{background:#FDEBEC;color:var(--red)}.flag.rif{background:#FFF4E5;color:#B36B00}
 .flag.check{background:#FFF4E5;color:var(--amber)}.flag.ann{background:#EEF0F2;color:#6E7681}
 .flag.rientro{background:#E8F1FB;color:#1D4ED8}
-.empty{color:var(--gray);font-size:12px;text-align:center;padding:14px 6px;border:1.5px dashed var(--line);border-radius:9px}
-.opwrap{display:grid;grid-template-columns:1fr 300px;gap:18px;margin-top:16px}
-.queue{background:#fff;border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:12px;padding:14px;margin-bottom:16px}
+.empty{color:var(--gray);font-size:12px;text-align:center;padding:12px 6px;border:1.5px dashed var(--line);border-radius:9px}
+.opwrap{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:16px;margin-top:16px}
+.queue{background:#fff;border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:12px;padding:14px;margin-bottom:14px}
 .queue h3{font-family:var(--disp);font-size:14px;margin-bottom:10px}
-.qrow{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:13px}
+.qrow{display:flex;gap:10px;align-items:center;padding:7px 0;border-top:1px solid var(--line);font-size:13px}
 .qrow:first-of-type{border-top:0}
-.kanban{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
-.kcol{background:#EEF0F2;border-radius:12px;display:flex;flex-direction:column;min-height:260px}
-.khead{padding:10px 12px;font-family:var(--disp);font-weight:700;font-size:12.5px;color:#fff;border-radius:12px 12px 0 0;display:flex;align-items:center;gap:7px}
-.khead .cnt{margin-left:auto;font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.25);border-radius:99px;padding:1px 8px}
-.kbody{padding:8px;flex:1;overflow:auto;max-height:62vh}
-.kbody.dz.over{background:#E2F1F0;outline:2px dashed var(--teal);outline-offset:-6px}
-.kbody .ptable th{position:static}
 .side{display:flex;flex-direction:column;gap:14px}
 .spanel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px}
 .spanel h3{font-family:var(--disp);font-size:13px;margin-bottom:10px}
-.cd{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--teal);background:#EDF7F6;border-radius:99px;padding:3px 9px}
+.cd{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--teal);background:#EDF7F6;border-radius:99px;padding:3px 9px;white-space:nowrap}
 .cd.low{color:var(--red);background:#FDEBEC}
-.titem{display:flex;gap:8px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--line);font-size:12.5px}
+.titem{display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line);font-size:12.5px}
 .titem:first-of-type{border-top:0}.titem .st-dot{width:9px;height:9px;border-radius:3px;margin-top:4px;flex:none;background:var(--gray)}
 .titem.completata .st-dot{background:var(--verde)}.titem.non_completata .st-dot{background:var(--red)}
 .titem small{color:var(--muted);display:block}.titem .mot{color:var(--red);font-size:11px}
 .mini{border:0;background:0;color:var(--muted);font-size:11px;text-decoration:underline}
-.addrow{display:flex;gap:6px;margin-top:9px}.addrow input{flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:12.5px}
+.addrow{display:flex;gap:6px;margin-top:8px}.addrow input,.addrow select{flex:1;border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:12px;min-width:0}
 .ophdr{display:flex;align-items:center;gap:14px;margin-top:18px;flex-wrap:wrap}
 .ophdr h2{font-family:var(--disp);font-size:24px;display:flex;align-items:center;gap:10px}.ophdr .dot{width:14px;height:14px;border-radius:4px}
 .badge-ro{background:#FFF4E5;color:#B36B00;border-radius:99px;padding:4px 12px;font-size:11px;font-weight:700;letter-spacing:.06em}
-.board{display:grid;grid-template-columns:340px 1fr;gap:18px;margin-top:16px}
+.board{display:grid;grid-template-columns:320px minmax(0,1fr);gap:16px;margin-top:16px}
 .overlay{position:fixed;inset:0;background:rgba(24,27,30,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
 .modal{background:#fff;border-radius:14px;width:min(680px,100%);max-height:86vh;overflow:auto;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
 .modal h3{font-family:var(--disp);font-size:18px;margin-bottom:4px}.modal .sub{color:var(--muted);font-size:12.5px;margin-bottom:14px}
@@ -160,14 +171,11 @@ td.ic{white-space:nowrap}
 .statcard .vals{display:flex;gap:22px;margin-top:10px}
 .statcard .vals div span{display:block;font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 .statcard .vals div b{font-family:var(--mono);font-size:26px}
-details.archive{margin-top:14px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fff}
-details.archive summary{font-weight:600;cursor:pointer;font-size:13px}
-.arow{display:flex;justify-content:space-between;padding:7px 0;border-top:1px solid var(--line);font-size:12.5px}
-@media(max-width:1100px){.adminwrap,.board,.opwrap{grid-template-columns:1fr}.lanes{grid-template-columns:1fr}.kanban{grid-template-columns:repeat(2,1fr)}.login{grid-template-columns:1fr}}
+@media(max-width:1100px){.adminwrap,.board,.opwrap{grid-template-columns:1fr}.lanes{grid-template-columns:1fr}.pick{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div id="loader"><div class="ring"></div><div class="word">PLANCIA<i>·</i>grafica</div><small>caricamento</small></div>
+<div id="loader"><div class="ring"></div><div class="word">Dashboard<i>·</i>Grafica</div><small>caricamento</small></div>
 <div id="app"></div><div id="modal-root"></div><div id="toasts"></div>
 <script>
 /* ============ CONFIG ============ */
@@ -176,15 +184,18 @@ const SUPABASE_ANON_KEY='sb_publishable_-oMtcBH1bb3QXjUZxQVwEA_AYYjY12V';
 const EMAIL_DOMAIN='grafica.local';
 const OPER_PW='staff!2026';
 const ACC_MIN=60, VERIFY_H=48;
+const POSTIT=['#FFF6C6','#FFE0E6','#E2F6DF','#DDEBFF','#FFE9D1','#EDE6FF'];
 
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-let S={prof:null,profiles:[],orders:[],tasks:[],notes:[],notifs:[],meta:{},tab:'ordini',archive:[],notifOpen:false,
- showAnn:localStorage.getItem('plancia_showann')==='1',taskFilter:'open'};
+let S={prof:null,profiles:[],orders:[],tasks:[],notes:[],notifs:[],meta:{},tab:'ordini',notifOpen:false,
+ showAnn:localStorage.getItem('dg_showann')==='1',taskFilter:'open'};
 
 const STATI={da_iniziare:{l:'Da iniziare',c:'#2F6BFF'},bozza_inviata:{l:'Bozza inviata',c:'#F5B301'},
  modifiche:{l:'Modifiche da fare',c:'#B49AF0'},da_produrre:{l:'Da produrre',c:'#6FC3F2'},completato:{l:'Completato',c:'#1FA45B'}};
 const ALLSTATI={...STATI,in_accettazione:{l:'In accettazione',c:'#04A29C'},verificato_ok:{l:'Completato verificato',c:'#9AA0A6'},
  problema:{l:'Problema',c:'#E5484D'},da_assegnare:{l:'Da assegnare',c:'#6E7681'},annullato:{l:'Annullato',c:'#C4C9CE'},sospeso:{l:'Sospeso',c:'#8A6100'}};
+const SHORT={da_iniziare:'Inizio',bozza_inviata:'Bozza',modifiche:'Modifiche',da_produrre:'Produz.',completato:'Complet.',
+ in_accettazione:'Accett.',verificato_ok:'Verificato',problema:'Problema',da_assegnare:'Smistare',annullato:'Annull.',sospeso:'Sospeso'};
 
 /* ============ utility ============ */
 const $=s=>document.querySelector(s);
@@ -207,6 +218,7 @@ const inCorso=id=>S.orders.filter(o=>o.grafico===id&&!['completato','verificato_
 function toast(msg,type=''){const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;$('#toasts').append(t);setTimeout(()=>t.remove(),5000)}
 function showModal(html){$('#modal-root').innerHTML=`<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="modal">${html}</div></div>`}
 function closeModal(){$('#modal-root').innerHTML=''}
+function noAutocomplete(){document.querySelectorAll('input,textarea,select').forEach(el=>{el.setAttribute('autocomplete','off');el.setAttribute('autocorrect','off')})}
 function applyLocal(id,patch){const o=S.orders.find(x=>x.id===id);if(o)Object.assign(o,patch)}
 function beep(){try{const c=new (window.AudioContext||window.webkitAudioContext)();const o=c.createOscillator();const g=c.createGain();
  o.connect(g);g.connect(c.destination);o.frequency.value=880;
@@ -303,9 +315,7 @@ async function loadAll(){
  const nt=await sb.from('task_notes').select('*').order('creato_il');S.notes=nt.data||[];
  if(S.prof&&S.prof.role==='admin'){
   const n=await sb.from('notifications').select('*').order('creato_il',{ascending:false}).limit(50);
-  S.notifs=n.data||[];
-  const a=await sb.from('stats_archive').select('*').order('creato_il',{ascending:false});
-  S.archive=a.data||[]}}
+  S.notifs=n.data||[]}}
 function subscribeRealtime(){sb.channel('db')
  .on('postgres_changes',{event:'*',schema:'public',table:'orders'},()=>softRefresh())
  .on('postgres_changes',{event:'*',schema:'public',table:'tasks'},()=>softRefresh())
@@ -320,7 +330,7 @@ function checkReminders(){
  if(!S.prof)return;
  const mine=S.prof.role==='admin'?S.tasks.filter(t=>!t.privata):S.tasks.filter(t=>!t.privata&&t.grafico===S.prof.id);
  const today=new Date();today.setHours(23,59,59,999);
- mine.filter(t=>t.stato==='aperta'&&t.scadenza&&new Date(t.scadenma||t.scadenza+'T00:00:00')<=today).forEach(t=>{
+ mine.filter(t=>t.stato==='aperta'&&t.scadenza&&new Date(t.scadenza+'T00:00:00')<=today).forEach(t=>{
   if(localStorage.getItem('rem_'+t.id))return;
   localStorage.setItem('rem_'+t.id,'1');beep();
   toast('⏰ Task in scadenza: '+t.titolo,'warn')})}
@@ -329,9 +339,9 @@ function checkReminders(){
 function hideLoader(){const l=document.getElementById('loader');if(l){l.classList.add('hide');setTimeout(()=>l.remove(),300)}}
 function route(){hideLoader();const r=S.prof.role;
  if(r==='admin')renderAdmin();else if(r==='owner')renderOwner();else renderOperator();
- requestAnimationFrame(bindDnD)}
+ noAutocomplete();requestAnimationFrame(bindDnD)}
 function topbar(center){const unread=S.notifs.filter(n=>!n.letto).length;
- return `<div class="topbar"><div class="brand">PLANCIA<i>·</i>grafica</div>${center}
+ return `<div class="topbar"><div class="brand">Dashboard<i>·</i>Grafica</div>${center}
  <div class="uchip"><span class="dot" style="background:${S.prof.color}"></span>${esc(S.prof.display_name)}
  <button class="btn ghost sm" onclick="logout()">Esci</button></div>
  ${S.prof.role==='admin'?`<div class="bellwrap"><button class="bell" onclick="toggleNotif()">🔔${unread?`<span class="n">${unread}</span>`:''}</button>
@@ -341,11 +351,17 @@ function toggleNotif(){S.notifOpen=!S.notifOpen;route()}
 async function markAllRead(){for(const n of S.notifs.filter(x=>!x.letto))await sb.from('notifications').update({letto:true}).eq('id',n.id);
  await loadAll();route()}
 async function readNotif(id){await sb.from('notifications').update({letto:true}).eq('id',id);S.notifOpen=false;await loadAll();route()}
-function renderLogin(){hideLoader();$('#app').innerHTML=`<div class="login">
- <div class="login-l"><div><h1>Chi entra<br>in <em>plancia</em>?</h1>
- <p>Smistamento ordini, task e avanzamento della squadra grafica. Scegli il tuo profilo per accedere.</p></div>
- <div class="mono" style="color:#5A6169;font-size:12px">ordini · task · stati · verifiche</div></div>
- <div class="login-r"><div class="pick"><h2>Seleziona operatore</h2>
+async function renderLogin(){
+ hideLoader();
+ let st=null;try{const r=await sb.rpc('public_stats');st=r.data}catch(e){}
+ $('#app').innerHTML=`<div class="loginwrap"><div class="loginbox">
+ <h1>Dashboard <em>Grafica</em></h1>
+ <p class="sub">Smistamento ordini, task e avanzamento della squadra.</p>
+ ${st?`<div class="livebar"><span class="lb"><b>${st.tot}</b> lavori in corso</span>
+ <span class="lb"><b>${st.smistare}</b> da smistare</span>
+ <span class="lb"><b>${st.lavoro}</b> in lavorazione</span>
+ <span class="lb"><b>${st.completati}</b> completati</span></div>`:''}
+ <div class="pick"><h2>Seleziona operatore</h2>
  <button class="pcard" style="--c:#F5B301" onclick="login('alberto')"><span class="dot"></span><span><b>Alberto</b><span>Operatore grafico</span></span></button>
  <button class="pcard" style="--c:#2F6BFF" onclick="login('samuele')"><span class="dot"></span><span><b>Samuele</b><span>Operatore grafico</span></span></button>
  <button class="pcard" style="--c:#1FA45B" onclick="login('pietro')"><span class="dot"></span><span><b>Pietro</b><span>Operatore grafico</span></span></button>
@@ -353,7 +369,8 @@ function renderLogin(){hideLoader();$('#app').innerHTML=`<div class="login">
  <div class="pcard full" style="--c:#23272B"><span class="dot"></span><span><b>Salvo G.</b><span>Coordinatore</span></span>
  <input id="salvo-pw" type="password" placeholder="password" onkeydown="if(event.key==='Enter')login('salvo')">
  <button class="btn dark sm" onclick="login('salvo')">Entra</button></div>
- </div></div></div>`}
+ </div></div></div>`;
+ noAutocomplete()}
 
 /* ============ righe ordine ============ */
 function flagsCell(o){const f=[];
@@ -365,41 +382,53 @@ function flagsCell(o){const f=[];
 function rowPool(o){
  const late=o.consegna&&new Date(o.consegna+'T23:59')<new Date();
  return `<tr draggable="true" data-id="${o.id}" ondblclick="editOrder('${o.id}')" title="Doppio click: modifica/assegna · Trascina su un grafico">
- <td class="mono">${o.tassativo?'<span class="star">★</span> ':''}#${esc(o.numero)}</td>
- <td>${esc(o.cliente)}</td>
- <td class="${late?'late':''}">${fmtDE(o.consegna)}${o.tassativo?' <span class="chip">'+(o.consegna_ora||'18:00')+'</span>':''}</td>
- <td>${esc(o.settore||'—')}</td>
+ <td class="nowrap mono">${o.tassativo?'<span class="star">★</span> ':''}#${esc(o.numero)}</td>
+ <td><div class="clicell" title="${esc(o.cliente)}">${esc(o.cliente)}</div></td>
+ <td class="nowrap ${late?'late':''}">${fmtDE(o.consegna)}${o.tassativo?' <span class="chip">'+(o.consegna_ora||'18:00')+'</span>':''}</td>
+ <td class="nowrap">${esc(o.settore||'—')}</td>
  <td class="mutedcell">${esc(trunc(o.commento,50))}</td>
- <td>${flagsCell(o)}</td>
+ <td class="nowrap">${flagsCell(o)}</td>
  <td class="ic"><button class="info" onclick="showLog('${o.id}')">i</button></td></tr>`}
 function rowLane(o,ctx){
  const st=ALLSTATI[o.status];
  const late=o.consegna&&new Date(o.consegna+'T23:59')<new Date()&&!['completato','verificato_ok','annullato'].includes(o.status);
  const icons=[`<button class="info" onclick="showLog('${o.id}')">i</button>`];
- if(ctx==='op'){icons.push(`<button class="info" title="Rimanda in smistamento (commento obbligatorio)" onclick="askReturn('${o.id}')">↩</button>`);
-  if(o.status!=='sospeso')icons.push(`<button class="info" title="Sospendi" onclick="askSuspend('${o.id}')">⏸</button>`)}
- return `<tr draggable="${ctx!=='ro'}" data-id="${o.id}" ${ctx==='admin'?`ondblclick="editOrder('${o.id}')"`:''} class="${ctx==='ro'?'ro':''}">
- <td class="mono">${o.tassativo?'<span class="star">★</span> ':''}#${esc(o.numero)}</td>
- <td>${esc(o.cliente)}</td>
- <td class="${late?'late':''}">${fmtDE(o.consegna)}</td>
- ${ctx==='admin'||ctx==='ro'?`<td>${st?`<span class="chip st" style="background:${st.c}">${st.l}</span>`:''}</td>`:''}
- ${ctx==='op'?`<td>${o.revisioni?`<span class="chip">rev ${o.revisioni}</span>`:''}</td>`:''}
+ let rowCls=ctx==='ro'?'ro':'';
+ let warnChip='';
+ if(ctx==='op'){
+  icons.push(`<button class="info" title="Rimanda in smistamento (commento obbligatorio)" onclick="askReturn('${o.id}')">↩</button>`);
+  if(o.status!=='sospeso')icons.push(`<button class="info" title="Sospendi" onclick="askSuspend('${o.id}')">⏸</button>`);
+  if(o.status==='completato'){
+   const isGray=ageHours(o.completato_at)<=VERIFY_H;
+   const isWarn=ageHours(o.completato_at)>VERIFY_H;
+   if(isGray)rowCls+=' grayrow';
+   if(isWarn){rowCls+=' warnrow';warnChip='<span class="flag check">verifica stato</span> '}
+   icons.push(`<button class="info" title="Riporta in smistamento" onclick="reopen('${o.id}')">↺</button>
+   <button class="btn sm ok" onclick="verify('${o.id}',true)">OK</button>
+   <button class="btn sm danger" onclick="verify('${o.id}',false)">⚠</button>`)}}
+ return `<tr draggable="${ctx!=='ro'}" data-id="${o.id}" ${ctx==='admin'?`ondblclick="editOrder('${o.id}')"`:''} class="${rowCls}">
+ <td class="nowrap mono">${o.tassativo?'<span class="star">★</span> ':''}#${esc(o.numero)}</td>
+ <td><div class="clicell" title="${esc(o.cliente)}">${warnChip}${esc(o.cliente)}</div></td>
+ <td class="nowrap ${late?'late':''}">${fmtDE(o.consegna)}</td>
+ ${ctx==='admin'||ctx==='ro'?`<td class="stcell">${st?`<span class="stdot" style="background:${st.c}"></span>${SHORT[o.status]||st.l}`:''}</td>`:''}
+ ${ctx==='op'?`<td class="nowrap">${o.revisioni?`<span class="chip">rev ${o.revisioni}</span>`:''}</td>`:''}
  <td class="ic">${icons.join('')}</td></tr>`}
 function rowSpecial(o){
- return `<tr class="ro"><td class="mono">${o.tassativo?'<span class="star">★</span> ':''}#${esc(o.numero)}</td>
- <td>${esc(o.cliente)}</td>
- <td><span class="chip" style="background:${opColor(o.grafico)}22;color:${opColor(o.grafico)}">${esc(opName(o.grafico))}</span></td>
- <td>${fmtDE(o.consegna)}</td>
+ return `<tr class="ro"><td class="nowrap mono">${o.tassativo?'<span class="star">★</span> ':''}#${esc(o.numero)}</td>
+ <td><div class="clicell" title="${esc(o.cliente)}">${esc(o.cliente)}</div></td>
+ <td class="nowrap"><span class="chip" style="background:${opColor(o.grafico)}22;color:${opColor(o.grafico)}">${esc(opName(o.grafico))}</span></td>
+ <td class="nowrap">${fmtDE(o.consegna)}</td>
  <td class="ic"><button class="info" onclick="showLog('${o.id}')">i</button></td></tr>`}
-function tableWrap(html,head,dz){return `<div class="tablewrap ${dz||''}"><table class="ptable"><thead><tr>${head}</tr></thead><tbody>${html||'<tr><td colspan="8"><div class="empty">Vuoto</div></td></tr>'}</tbody></table></div>`}
-const HEAD_POOL='<th>N.</th><th>Cliente</th><th>Consegna</th><th>Settore</th><th>Note</th><th>Segnali</th><th></th>';
-const HEAD_LANE='<th>N.</th><th>Cliente</th><th>Consegna</th><th>Stato</th><th></th>';
-const HEAD_OP='<th>N.</th><th>Cliente</th><th>Consegna</th><th>Rev</th><th></th>';
-const HEAD_SPEC='<th>N.</th><th>Cliente</th><th>Operatore</th><th>Consegna</th><th></th>';
+function tablePlain(html,head){return `<table class="ptable"><thead><tr>${head}</tr></thead><tbody>${html||'<tr><td colspan="8"><div class="empty">Vuoto</div></td></tr>'}</tbody></table>`}
+function tableWrap(html,head){return `<div class="tablewrap">${tablePlain(html,head)}</div>`}
+const HEAD_POOL='<th style="width:92px">N.</th><th>Cliente</th><th style="width:112px">Consegna</th><th style="width:100px">Settore</th><th style="width:220px">Note</th><th style="width:150px">Segnali</th><th style="width:34px"></th>';
+const HEAD_LANE='<th style="width:92px">N.</th><th>Cliente</th><th style="width:112px">Consegna</th><th style="width:100px">Stato</th><th style="width:34px"></th>';
+const HEAD_OP='<th style="width:92px">N.</th><th>Cliente</th><th style="width:112px">Consegna</th><th style="width:56px">Rev</th><th style="width:132px"></th>';
+const HEAD_SPEC='<th style="width:92px">N.</th><th>Cliente</th><th style="width:110px">Operatore</th><th style="width:112px">Consegna</th><th style="width:34px"></th>';
 
 /* ============ ADMIN ============ */
 function setTab(t){S.tab=t;route()}
-function setShowAnn(v){S.showAnn=v;localStorage.setItem('plancia_showann',v?'1':'0');route()}
+function setShowAnn(v){S.showAnn=v;localStorage.setItem('dg_showann',v?'1':'0');route()}
 function setTaskFilter(f){S.taskFilter=f;route()}
 function renderAdmin(){
  const last=S.meta['ultimo_import'];
@@ -414,7 +443,8 @@ function taskSide(){
  const list=S.taskFilter==='open'?open:S.taskFilter==='done'?done:prob;
  const items=list.map(t=>{
   const notes=S.notes.filter(n=>n.task_id===t.id);
-  return `<div class="trow2 ${t.stato!=='aperta'?'done':''}">
+  const bg=t.colore?` style="background:${t.colore};border-radius:8px;padding:7px 8px;border:1px solid rgba(0,0,0,.08)"`:'';
+  return `<div class="trow2 ${t.stato!=='aperta'?'done':''}"${bg}>
   <div class="tt">${t.stato==='completata'?'✔':t.stato==='non_completata'?'⚠':'•'} ${esc(t.titolo)}</div>
   <small>${esc(opName(t.grafico))}${t.scadenza?' · scad. '+fmtDE(t.scadenza):''}${notes.length?' · '+notes.length+' appunti':''}</small>
   ${t.allegato_url?`<a href="${t.allegato_url}" target="_blank"><img class="thumb" src="${t.allegato_url}"></a>`:''}
@@ -426,7 +456,7 @@ function taskSide(){
  <div class="tside-card"><h3>Task · controllo</h3>
   <div class="tfilters">
    <button class="${S.taskFilter==='open'?'on':''}" onclick="setTaskFilter('open')">Aperte ${open.length}</button>
-   <button class="${S.taskFilter==='done'?'on':''}" onclick="setTaskFilter('done')">Completate 7gg ${done.length}</button>
+   <button class="${S.taskFilter==='done'?'on':''}" onclick="setTaskFilter('done')">Compl. 7gg ${done.length}</button>
    <button class="${S.taskFilter==='prob'?'on':''}" onclick="setTaskFilter('prob')">Problemi ${prob.length}</button>
   </div>${items||'<div class="empty">Nessuna task</div>'}</div>
  <div class="tside-card"><h3>Nuova task</h3>
@@ -441,25 +471,29 @@ function adminOrdini(){
  const probs=S.orders.filter(o=>o.status==='problema');
  const prod=S.orders.filter(o=>o.status==='da_produrre');
  const sosp=S.orders.filter(o=>o.status==='sospeso');
+ const doneList=S.orders.filter(o=>o.status==='verificato_ok');
  let main=`<div style="display:flex;gap:8px;margin:0 0 14px">
  <input type="file" id="csv" accept=".csv" style="display:none" onchange="handleFile(this.files[0])">
  <button class="btn pri" onclick="document.getElementById('csv').click()">⇪ Importa CSV</button></div>`;
  if(probs.length)main+=`<div class="tray"><div class="trayhead alert">⚠ Problemi segnalati<span class="cnt">${probs.length}</span></div>
- <div class="traybody">${tableWrap(probs.map(o=>rowLane(o,'admin')).join(''),HEAD_LANE,'')}</div></div>`;
+ <div class="traybody">${tablePlain(probs.map(o=>rowLane(o,'admin')).join(''),HEAD_LANE)}</div></div>`;
  main+=`<div class="tray"><div class="trayhead">Da smistare<span class="cnt">${pool.length}</span>
  <span class="headtools"><label class="switchlabel"><input type="checkbox" ${S.showAnn?'checked':''} onchange="setShowAnn(this.checked)"> annullati</label></span></div>
- <div class="tablewrap dz" data-drop="pool" id="poolwrap">${tableWrap(pool.map(rowPool).join(''),HEAD_POOL,'dz-inner')}</div></div>`;
+ <div class="tablewrap dz tall" data-drop="pool" id="poolwrap">${tablePlain(pool.map(rowPool).join(''),HEAD_POOL)}</div></div>`;
  if(prod.length)main+=`<div class="tray"><div class="trayhead prod">DA PRODURRE · pronti per la produzione<span class="cnt">${prod.length}</span></div>
- <div class="traybody">${tableWrap(prod.map(rowSpecial).join(''),HEAD_SPEC,'')}</div></div>`;
+ <div class="traybody">${tablePlain(prod.map(rowSpecial).join(''),HEAD_SPEC)}</div></div>`;
  if(sosp.length)main+=`<div class="tray"><div class="trayhead sosp">SOSPESO<span class="cnt">${sosp.length}</span></div>
- <div class="traybody">${tableWrap(sosp.map(rowSpecial).join(''),HEAD_SPEC,'')}</div></div>`;
+ <div class="traybody">${tablePlain(sosp.map(rowSpecial).join(''),HEAD_SPEC)}</div></div>`;
  const lanes=operators().map(op=>{
-  const items=S.orders.filter(o=>o.grafico===op.id&&!['annullato'].includes(o.status));
+  const items=S.orders.filter(o=>o.grafico===op.id&&o.status!=='annullato');
   return `<div class="lane"><div class="lanehead"><span class="dot" style="background:${op.color}"></span><b>${esc(op.display_name)}</b><span class="cnt">${items.length} · ${inCorso(op.id)} in corso</span></div>
-  <div class="lanebody dz" data-drop="lane:${op.id}">${tableWrap(items.map(o=>rowLane(o,'admin')).join(''),HEAD_LANE,'')}</div></div>`}).join('');
+  <div class="lanebody dz" data-drop="lane:${op.id}">${tablePlain(items.map(o=>rowLane(o,'admin')).join(''),HEAD_LANE)}</div></div>`}).join('');
  main+=`<div class="lanes">${lanes}</div>`;
+ if(doneList.length)main+=`<div class="tray"><div class="trayhead muted">Completati verificati<span class="cnt">${doneList.length}</span>
+ <span class="headtools"><button class="btn sm danger" onclick="purgeCompletati()">🗑 Elimina definitivamente</button></span></div>
+ <div class="traybody">${tablePlain(doneList.map(rowSpecial).join(''),HEAD_SPEC)}</div></div>`;
  if(S.showAnn&&ann.length)main+=`<div class="tray"><div class="trayhead muted">Annullati<span class="cnt">${ann.length}</span></div>
- <div class="traybody">${tableWrap(poolSort(ann).map(o=>rowLane(o,'ro')).join(''),HEAD_LANE,'')}</div></div>`;
+ <div class="traybody">${tablePlain(poolSort(ann).map(o=>rowLane(o,'ro')).join(''),HEAD_LANE)}</div></div>`;
  return `<div class="adminwrap">${taskSide()}<div>${main}</div></div>`}
 function countFor(opId,start,end){
  const z=S.meta['contatori_zeroed_at']?new Date(S.meta['contatori_zeroed_at']):null;
@@ -471,23 +505,21 @@ function adminStats(){
  const cards=operators().map(op=>`<div class="statcard" style="--c:${op.color}"><b>${esc(op.display_name)}</b>
  <div class="vals"><div><span>Settimana</span><b>${countFor(op.id,ws,we)}</b></div>
  <div><span>Mese</span><b>${countFor(op.id,ms,me)}</b></div></div></div>`).join('');
- const doneList=S.orders.filter(o=>o.status==='verificato_ok');
- const arch=S.archive.length?`<details class="archive"><summary>Archivio (${S.archive.length})</summary>
- ${S.archive.map(a=>`<div class="arow"><span>${esc(a.mese)}</span><button class="mini" onclick='pdfFromArchive(${JSON.stringify(a.dati).replace(/'/g,"&#39;")})'>PDF</button></div>`).join('')}</details>`:'';
  return `<div class="panel"><div class="statsgrid">${cards}</div>
  <div style="display:flex;gap:10px;flex-wrap:wrap">
- <button class="btn pri" onclick="downloadPDF()">⇓ PDF mese</button>
- <button class="btn dark" onclick="archiveMonth()">Archivia mese</button>
+ <button class="btn pri" onclick="pdfCompletatiMese()">⇓ PDF completati del mese</button>
  <button class="btn" onclick="zeroCounters()">Azzera contatori</button>
- <button class="btn" onclick="pdfCompletati()">⇓ PDF completati (${doneList.length})</button>
- <button class="btn danger" onclick="purgeCompletati()">🗑 Elimina completati dal DB</button></div>
- ${doneList.length?`<div style="margin-top:16px">${tableWrap(doneList.map(o=>rowSpecial(o)).join(''),HEAD_SPEC,'')}</div>`:''}
- ${arch}</div>`}
+ <button class="btn danger" onclick="purgeReports()">🗑 Elimina tutti i report</button></div></div>`}
 async function zeroCounters(){
- if(!confirm('Azzerare i contatori settimana/mese di tutti i grafici? Viene salvato uno snapshot in archivio.'))return;
+ if(!confirm('Azzerare i contatori settimana/mese di tutti i grafici? Viene salvato uno snapshot nell\'archivio report.'))return;
  await sb.from('stats_archive').insert({mese:new Date().toISOString().slice(0,7),dati:statsPayload()});
  await sb.from('meta').upsert({chiave:'contatori_zeroed_at',valore:new Date().toISOString(),aggiornato_il:new Date().toISOString()});
  await loadAll();route();toast('Contatori azzerati','ok')}
+async function purgeReports(){
+ if(!confirm('Eliminare TUTTI i report e i dati statistici salvati (archivio)? I lavori e gli stati restano invariati.'))return;
+ const{error}=await sb.from('stats_archive').delete().neq('mese','__none__');
+ if(error){toast(error.message,'err');return}
+ await loadAll();route();toast('Report eliminati','ok')}
 async function purgeCompletati(){
  const ids=S.orders.filter(o=>o.status==='verificato_ok').map(o=>o.id);
  if(!ids.length){toast('Nessun completato verificato da eliminare','warn');return}
@@ -511,7 +543,8 @@ function editOrder(id){
  ${o.tassativo?'<p class="sub">★ Ordine tassativo: la data di consegna è obbligatoria (ora default 18:00).</p>':''}
  <div class="msec"><header>Assegna a…</header>${ops}</div>
  <div class="mfoot"><button class="btn" onclick="closeModal()">Chiudi</button>
- <button class="btn pri" onclick="saveOrder('${id}')">Salva modifiche</button></div>`)}
+ <button class="btn pri" onclick="saveOrder('${id}')">Salva modifiche</button></div>`);
+ noAutocomplete()}
 async function saveOrder(id){
  const o=S.orders.find(x=>x.id===id);
  const patch={cliente:$('#eo-cli').value.trim()||o.cliente,settore:$('#eo-set').value.trim()||null,
@@ -528,7 +561,7 @@ async function assignFromModal(id,g){
  if(error){toast(error.message,'err');return}
  closeModal();await loadAll();route();toast('Assegnato a '+opName(g),'ok')}
 
-/* ============ OPERATOR ============ */
+/* ============ OPERATOR (cascata) ============ */
 function renderOperator(){
  const my=S.orders.filter(o=>o.grafico===S.prof.id);
  const queue=my.filter(o=>o.status==='in_accettazione');
@@ -543,43 +576,48 @@ function renderOperator(){
  <span style="flex:1">${esc(o.cliente)}</span><span class="cd" data-deadline="${o.assegnato_at}"></span>
  <button class="btn sm ok" onclick="accept('${o.id}')">Accetta</button>
  <button class="btn sm danger" onclick="askReject('${o.id}')">Rifiuta</button></div>`).join('')}</div>`:'';
- const sospHTML=sosp.length?`<div class="tray" style="margin-bottom:16px"><div class="trayhead sosp">Sospesi (tuoi)<span class="cnt">${sosp.length}</span></div>
- <div class="traybody">${tableWrap(sosp.map(o=>rowLane(o,'op')).join(''),HEAD_OP,'')}</div></div>`:'';
- const kanban=Object.keys(STATI).map(k=>{
+ const sospHTML=sosp.length?`<div class="tray" style="margin-bottom:14px"><div class="trayhead sosp">Sospesi (tuoi)<span class="cnt">${sosp.length}</span></div>
+ <div class="traybody">${tablePlain(sosp.map(o=>rowLane(o,'op')).join(''),HEAD_OP)}</div></div>`:'';
+ const cascata=Object.keys(STATI).map(k=>{
   const v=STATI[k];const items=poolSort(my.filter(o=>o.status===k));
-  return `<div class="kcol"><div class="khead" style="background:${v.c}">${v.l}<span class="cnt">${items.length}</span></div>
-  <div class="kbody dz" data-drop="col:${k}">${items.length?`<table class="ptable"><tbody>${items.map(o=>rowLane(o,'op')).join('')}</tbody></table>`:'<div class="empty">—</div>'}</div></div>`}).join('');
+  return `<div class="tray"><div class="trayhead" style="background:${v.c}">${v.l}<span class="cnt">${items.length}</span></div>
+  <div class="traybody dz" data-drop="col:${k}">${items.length?tablePlain(items.map(o=>rowLane(o,'op')).join(''),HEAD_OP):'<div class="empty">—</div>'}</div></div>`}).join('');
  const tasksHTML=myTasks.length?myTasks.map(t=>`<div class="titem"><span class="st-dot"></span>
  <div style="flex:1"><b>${esc(t.titolo)}</b>${t.descrizione?`<small>${esc(t.descrizione)}</small>`:''}
  ${t.scadenza?`<small>scad. ${fmtDE(t.scadenza)}</small>`:''}</div>
  <button class="mini" onclick="taskDone('${t.id}',true)">✔</button><button class="mini" onclick="taskDone('${t.id}',false)">✘</button></div>`).join(''):'<div class="empty">Nessuna task</div>';
- const privHTML=myPriv.map(t=>`<div class="titem ${t.stato}"><span class="st-dot"></span>
- <div style="flex:1">${esc(t.titolo)}</div><button class="mini" onclick="togglePriv('${t.id}')">${t.stato==='aperta'?'✔':'↩'}</button>
- <button class="mini" onclick="delPriv('${t.id}')">🗑</button></div>`).join('');
+ const privHTML=myPriv.map(t=>`<div class="postit" style="background:${t.colore||'#FFF6C6'}">
+ <div class="tt">${t.stato==='completata'?'✔':t.stato==='non_completata'?'⚠':'•'} ${esc(t.titolo)}</div>
+ ${t.descrizione?`<small>${esc(t.descrizione)}</small>`:''}
+ ${t.scadenza?`<small>scad. ${fmtDE(t.scadenza)}</small>`:''}
+ ${t.allegato_url?`<a href="${t.allegato_url}" target="_blank"><img class="thumb" src="${t.allegato_url}"></a>`:''}
+ <div class="acts">
+  <button class="btn sm" onclick="togglePriv('${t.id}')">${t.stato==='aperta'?'✔ fatta':'↩ riapri'}</button>
+  <button class="btn sm" onclick="taskEdit('${t.id}')">✎</button>
+  <button class="btn sm danger" onclick="delTask('${t.id}')" title="Elimina task">🗑</button>
+ </div></div>`).join('');
  $('#app').innerHTML=topbar('')+`<main><div class="ophdr"><h2><span class="dot" style="background:${S.prof.color}"></span>${esc(S.prof.display_name)}</h2>
  <span class="chip">Settimana: ${wc}</span><span class="chip">Mese: ${mc}</span></div>
- <div class="opwrap"><div>${queueHTML}${sospHTML}<div class="kanban">${kanban}</div></div>
+ <div class="opwrap"><div>${queueHTML}${sospHTML}${cascata}</div>
  <div class="side"><div class="spanel"><h3>Le mie task</h3>${tasksHTML}</div>
- <div class="spanel"><h3>Task private</h3>${privHTML}
- <div class="addrow"><input id="priv-in" placeholder="Nuova task privata" onkeydown="if(event.key==='Enter')addPriv()">
+ <div class="spanel"><h3>I miei appunti (task private)</h3>${privHTML}
+ <div class="addrow"><input id="priv-in" placeholder="Nuovo appunto" onkeydown="if(event.key==='Enter')addPriv()">
  <button class="btn sm" onclick="addPriv()">+</button></div></div></div></div></main>`;
  tickCountdowns()}
 
 /* ============ OWNER ============ */
 function renderOwner(){
  const pool=poolSort(S.orders.filter(o=>o.status==='da_assegnare'));
- const prod=S.orders.filter(o=>o.status==='da_produrre');
  const sosp=S.orders.filter(o=>o.status==='sospeso');
  const lanes=operators().map(op=>{
   const items=S.orders.filter(o=>o.grafico===op.id&&o.status!=='annullato');
   return `<div class="lane"><div class="lanehead"><span class="dot" style="background:${op.color}"></span><b>${esc(op.display_name)}</b><span class="cnt">${items.length}</span></div>
-  <div class="lanebody">${tableWrap(items.map(o=>rowLane(o,'ro')).join(''),HEAD_LANE,'')}</div></div>`}).join('');
+  <div class="lanebody">${tablePlain(items.map(o=>rowLane(o,'ro')).join(''),HEAD_LANE)}</div></div>`}).join('');
  let extra='';
- if(prod.length)extra+=`<div class="tray"><div class="trayhead prod">DA PRODURRE<span class="cnt">${prod.length}</span></div><div class="traybody">${tableWrap(prod.map(rowSpecial).join(''),HEAD_SPEC,'')}</div></div>`;
- if(sosp.length)extra+=`<div class="tray"><div class="trayhead sosp">SOSPESO<span class="cnt">${sosp.length}</span></div><div class="traybody">${tableWrap(sosp.map(rowSpecial).join(''),HEAD_SPEC,'')}</div></div>`;
+ if(sosp.length)extra+=`<div class="tray"><div class="trayhead sosp">SOSPESO<span class="cnt">${sosp.length}</span></div><div class="traybody">${tablePlain(sosp.map(rowSpecial).join(''),HEAD_SPEC)}</div></div>`;
  $('#app').innerHTML=topbar('')+`<main><div class="ophdr"><h2>Titolari</h2><span class="badge-ro">SOLA LETTURA</span></div>
  <div class="board"><div><div class="tray"><div class="trayhead">Da smistare<span class="cnt">${pool.length}</span></div>
- <div class="traybody">${tableWrap(pool.map(o=>rowLane(o,'ro')).join(''),HEAD_LANE,'')}</div></div>${extra}</div>
+ <div class="traybody tall">${tablePlain(pool.map(o=>rowLane(o,'ro')).join(''),HEAD_LANE)}</div></div>${extra}</div>
  <div class="lanes">${lanes}</div></div></main>`}
 
 /* ============ drag&drop ============ */
@@ -590,11 +628,7 @@ function bindDnD(){
  document.querySelectorAll('.dz').forEach(z=>{
   z.addEventListener('dragover',e=>{e.preventDefault();z.classList.add('over')});
   z.addEventListener('dragleave',()=>z.classList.remove('over'));
-  z.addEventListener('drop',e=>{e.preventDefault();z.classList.remove('over');handleDrop(z.dataset.drop,e.dataTransfer.getData('text/plain'))})});
- const pw=document.getElementById('poolwrap');
- if(pw){pw.addEventListener('dragover',e=>{e.preventDefault();pw.classList.add('over')});
-  pw.addEventListener('dragleave',()=>pw.classList.remove('over'));
-  pw.addEventListener('drop',e=>{e.preventDefault();pw.classList.remove('over');handleDrop('pool',e.dataTransfer.getData('text/plain'))})}}
+  z.addEventListener('drop',e=>{e.preventDefault();z.classList.remove('over');handleDrop(z.dataset.drop,e.dataTransfer.getData('text/plain'))})})}
 async function handleDrop(target,id){
  const o=S.orders.find(x=>x.id===id);if(!o)return;
  if(S.prof.role==='operator'){
@@ -614,7 +648,8 @@ async function handleDrop(target,id){
 /* ============ azioni ordini ============ */
 function askReturn(id){showModal(`<h3>Rimanda in smistamento</h3><p class="sub">Commento obbligatorio: spiega perché il lavoro torna in coda.</p>
  <textarea id="ret" rows="3" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:10px"></textarea>
- <div class="mfoot"><button class="btn" onclick="closeModal()">Annulla</button><button class="btn danger" onclick="doReturn('${id}')">Conferma</button></div>`)}
+ <div class="mfoot"><button class="btn" onclick="closeModal()">Annulla</button><button class="btn danger" onclick="doReturn('${id}')">Conferma</button></div>`);
+ noAutocomplete()}
 async function doReturn(id){
  const m=$('#ret').value.trim();if(!m){toast('Commento obbligatorio','err');return}
  closeModal();
@@ -626,7 +661,8 @@ async function doReturn(id){
   await loadAll();route()}}
 function askSuspend(id){showModal(`<h3>Sospendi lavoro</h3><p class="sub">Commento obbligatorio: finirà nella sezione SOSPESO di Salvo.</p>
  <textarea id="sus" rows="3" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:10px"></textarea>
- <div class="mfoot"><button class="btn" onclick="closeModal()">Annulla</button><button class="btn danger" onclick="doSuspend('${id}')">Sospendi</button></div>`)}
+ <div class="mfoot"><button class="btn" onclick="closeModal()">Annulla</button><button class="btn danger" onclick="doSuspend('${id}')">Sospendi</button></div>`);
+ noAutocomplete()}
 async function doSuspend(id){
  const m=$('#sus').value.trim();if(!m){toast('Commento obbligatorio','err');return}
  closeModal();
@@ -650,7 +686,8 @@ function askSurvey(id){
  <div style="margin:8px 0"><b style="font-size:12px">Il lavoro era completo?</b><div class="stars" id="s1">${[1,2,3,4,5].map(n=>`<button onclick="setStar(1,${n})">★</button>`).join('')}</div></div>
  <div style="margin:8px 0"><b style="font-size:12px">Cliente difficoltoso?</b><div class="stars" id="s2">${[1,2,3,4,5].map(n=>`<button onclick="setStar(2,${n})">★</button>`).join('')}</div></div>
  <textarea id="sn" rows="2" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:10px" placeholder="Note interne…"></textarea>
- <div class="mfoot"><button class="btn" onclick="closeModal()">Annulla</button><button class="btn pri" onclick="confirmSurvey('${id}')">Completa</button></div>`)}
+ <div class="mfoot"><button class="btn" onclick="closeModal()">Annulla</button><button class="btn pri" onclick="confirmSurvey('${id}')">Completa</button></div>`);
+ noAutocomplete()}
 function setStar(w,v){window._survey[w===1?'a':'b']=v;
  document.querySelectorAll('#s'+w+' button').forEach((b,i)=>b.classList.toggle('on',i<v))}
 async function confirmSurvey(id){
@@ -659,21 +696,12 @@ async function confirmSurvey(id){
  const patch={status:'completato',survey_completo:s.a||0,survey_cliente:s.b||0,survey_note:note};
  if(!o.completato_at)patch.completato_at=new Date().toISOString();
  closeModal();await mutate(id,patch,'Completato')}
-async function setStatus(id,v){
- if(!v)return;
- const o=S.orders.find(x=>x.id===id);
- if(v==='annullato'&&!confirm('Annullare questo ordine? Resterà nel vassoio Annullati.'))return;
- if(v==='da_assegnare'){await releaseOrder(id,{msg:'Rimesso in smistamento'});return}
- const patch={status:v,esito_verifica:null};
- if(v==='completato'&&!o.completato_at)patch.completato_at=new Date().toISOString();
- const ok=await mutate(id,patch,null);
- if(ok&&v==='problema'){await sb.from('notifications').insert({titolo:'⚠ Problema ordine #'+o.numero,corpo:o.cliente+' — segnalato da '+S.prof.display_name,ref_order:id});
-  toast('Problema segnalato','warn')}}
 async function reactivate(id){await mutate(id,{status:'da_assegnare',grafico:null,assegnato_at:null,scadenza_tempo:false,motivo_rifiuto:null,nota_rientro:null},'Ordine riattivato')}
 async function accept(id){await mutate(id,{status:'da_iniziare',accettato_at:new Date().toISOString()},'Ordine accettato')}
 function askReject(id){showModal(`<h3>Rifiuta ordine</h3><p class="sub">Motivazione obbligatoria: la vedrà Salvo per riassegnare con contesto.</p>
  <textarea id="rej" rows="3" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:10px"></textarea>
- <div class="mfoot"><button class="btn" onclick="closeModal()">Annulla</button><button class="btn danger" onclick="reject('${id}')">Rifiuta</button></div>`)}
+ <div class="mfoot"><button class="btn" onclick="closeModal()">Annulla</button><button class="btn danger" onclick="reject('${id}')">Rifiuta</button></div>`);
+ noAutocomplete()}
 async function reject(id){
  const el=$('#rej');if(!el){toast('Finestra chiusa, riprova','err');return}
  const m=el.value.trim();if(!m){toast('Scrivi una motivazione per rifiutare','err');return}
@@ -711,36 +739,42 @@ async function addTask(){
 async function taskDone(id,ok){
  if(ok){await sb.from('tasks').update({stato:'completata',chiuso_il:new Date().toISOString()}).eq('id',id);await loadAll();route();toast('Task completata','ok')}
  else{showModal(`<h3>Motivo mancato completamento</h3><textarea id="tm" rows="3" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:10px"></textarea>
- <div class="mfoot"><button class="btn" onclick="closeModal()">Annulla</button><button class="btn danger" onclick="confirmTaskNo('${id}')">Conferma</button></div>`)}}
+ <div class="mfoot"><button class="btn" onclick="closeModal()">Annulla</button><button class="btn danger" onclick="confirmTaskNo('${id}')">Conferma</button></div>`);
+ noAutocomplete()}}
 async function confirmTaskNo(id){
  const m=$('#tm').value.trim();if(!m){toast('Indica il motivo','err');return}
  await sb.from('tasks').update({stato:'non_completata',motivo:m,chiuso_il:new Date().toISOString()}).eq('id',id);
  closeModal();await loadAll();route()}
+function pickCol(c){window._col=c;document.querySelectorAll('#sw button').forEach(b=>b.classList.toggle('on',b.dataset.c===c))}
 function taskEdit(id){
  const t=S.tasks.find(x=>x.id===id);
  const notes=S.notes.filter(n=>n.task_id===id);
- showModal(`<h3>Task · ${esc(t.titolo)}</h3><p class="sub">Modifica veloce: descrizione, scadenza, allegato, appunti.</p>
+ window._col=t.colore||'';
+ showModal(`<h3>Task · ${esc(t.titolo)}</h3><p class="sub">Modifica veloce: descrizione, scadenza, colore post-it, allegato, appunti.</p>
  <div class="formrow"><input id="te-t" value="${esc(t.titolo)}"></div>
  <div class="formrow"><textarea id="te-d" rows="2" style="flex:1">${esc(t.descrizione||'')}</textarea></div>
  <div class="formrow"><select id="te-g">${operators().map(o=>`<option value="${o.id}" ${t.grafico===o.id?'selected':''}>${esc(o.display_name)}</option>`).join('')}</select>
  <input id="te-s" type="date" value="${t.scadenza||''}"></div>
+ <div class="formrow"><div class="swatches" id="sw">${POSTIT.map(c=>`<button style="background:${c}" data-c="${c}" class="${(t.colore||'')===c?'on':''}" onclick="pickCol('${c}')"></button>`).join('')}
+ <button style="background:#fff" data-c="" class="${!t.colore?'on':''}" onclick="pickCol('')" title="Nessun colore">∅</button></div></div>
  <div class="formrow">${t.allegato_url?`<a href="${t.allegato_url}" target="_blank"><img class="thumb" src="${t.allegato_url}"></a>`:''}
  <input type="file" id="te-f" accept="image/*" onchange="uploadAllegato('${id}',this.files[0])"></div>
  <div class="msec"><header>Appunti (${notes.length})</header>
  ${notes.map(n=>`<div class="mrow" style="cursor:default"><span><b>${esc(opName(n.autore))}</b> · ${esc(n.testo)} <span class="dest">${rel(n.creato_il)}</span></span></div>`).join('')||'<div class="mrow" style="cursor:default">Nessun appunto</div>'}
  <div class="mrow"><input id="note-in" style="flex:1;border:1px solid var(--line);border-radius:8px;padding:6px 8px" placeholder="Nuovo appunto…">
  <button class="btn sm" onclick="addNote('${id}')">+</button></div></div>
- <div class="mfoot"><button class="btn danger" onclick="delTask('${id}')">Elimina</button>
+ <div class="mfoot"><button class="btn danger" onclick="delTask('${id}')">🗑 Elimina</button>
  <button class="btn" onclick="closeModal()">Chiudi</button>
- <button class="btn pri" onclick="saveTask('${id}')">Salva</button></div>`)}
+ <button class="btn pri" onclick="saveTask('${id}')">Salva</button></div>`);
+ noAutocomplete()}
 async function saveTask(id){
  const{error}=await sb.from('tasks').update({titolo:$('#te-t').value.trim(),descrizione:$('#te-d').value.trim(),
-  grafico:$('#te-g').value,scadenza:$('#te-s').value||null}).eq('id',id);
+  grafico:$('#te-g').value,scadenza:$('#te-s').value||null,colore:window._col||null}).eq('id',id);
  if(error){toast(error.message,'err');return}
  closeModal();await loadAll();route();toast('Task aggiornata','ok')}
 async function delTask(id){
- if(!confirm('Eliminare la task?'))return;
- closeModal();await sb.from('tasks').delete().eq('id',id);await loadAll();route()}
+ if(!confirm('Eliminare definitivamente questa task?'))return;
+ closeModal();await sb.from('tasks').delete().eq('id',id);await loadAll();route();toast('Task eliminata','ok')}
 async function addNote(id){
  const v=$('#note-in').value.trim();if(!v)return;
  await sb.from('task_notes').insert({task_id:id,autore:S.prof.id,testo:v});
@@ -759,9 +793,8 @@ async function addPriv(){
  await loadAll();route()}
 async function togglePriv(id){
  const t=S.tasks.find(x=>x.id===id);
- await sb.from('tasks').update({stato:t.stato==='aperta'?'completata':'aperta'}).eq('id',id);
+ await sb.from('tasks').update({stato:t.stato==='aperta'?'completata':'aperta',chiuso_il:t.stato==='aperta'?new Date().toISOString():null}).eq('id',id);
  await loadAll();route()}
-async function delPriv(id){await sb.from('tasks').delete().eq('id',id);await loadAll();route()}
 
 /* ============ import CSV ============ */
 let IMPORT=null;
@@ -795,10 +828,7 @@ function showImportModal(){
  ${danea.map(r=>`<div class="mrow" style="cursor:default"><span>#${esc(r.numero)} · ${esc(r.cliente)}<br><span class="dest">In dashboard è <b>completato</b>, nel file risulta ancora attivo. Verifica e correggi Danea.</span></span></div>`).join('')}</div>`:'';
  showModal(`<h3>Anteprima importazione</h3><p class="sub">Controlla prima di scrivere nel database. ${skipped?'Ignorate '+skipped+' righe tecniche.':''}</p>
  ${secN}${secA}${secG}${secD}
- <div class="mfoot"><button class="btn" onclick="closeModal()">Annulla</button><button class="btn pri" onclick="confirmImport()">Conferma importazione</button></div>`);
- document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{
-  const i=b.dataset.gia;IMPORT.gia[i].choice=b.dataset.c;
-  b.parentElement.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on')})}
+ <div class="mfoot"><button class="btn" onclick="closeModal()">Annulla</button><button class="btn pri" onclick="confirmImport()">Conferma importazione</button></div>`)}
 async function confirmImport(){
  const selN=[...document.querySelectorAll('[data-nuovo]:checked')].map(x=>+x.dataset.nuovo);
  const selA=[...document.querySelectorAll('[data-ann]:checked')].map(x=>+x.dataset.ann);
@@ -828,7 +858,7 @@ function tickCountdowns(){
   el.classList.toggle('low',left<10*60000)});
  cdTimer=setTimeout(tickCountdowns,1000)}
 
-/* ============ PDF ============ */
+/* ============ PDF / statistiche ============ */
 function statsPayload(){
  const ws=monday(new Date()),we=new Date(ws);we.setDate(we.getDate()+7);
  const ms=monthStart(new Date()),me=new Date(ms);me.setMonth(me.getMonth()+1);
@@ -836,23 +866,14 @@ function statsPayload(){
   stats:operators().map(o=>({nome:o.display_name,settimana:countFor(o.id,ws,we),mese:countFor(o.id,ms,me)})),
   ordini:S.orders.filter(o=>o.completato_at&&new Date(o.completato_at)>=ms&&new Date(o.completato_at)<me)
    .map(o=>({numero:o.numero,cliente:o.cliente,grafico:opName(o.grafico),completato:fmtDT(o.completato_at)}))}}
-function pdfBuild(d){
+function pdfCompletatiMese(){
+ const ms=monthStart(new Date()),me=new Date(ms);me.setMonth(me.getMonth()+1);
+ const list=S.orders.filter(o=>o.completato_at&&new Date(o.completato_at)>=ms&&new Date(o.completato_at)<me);
+ if(!list.length){toast('Nessun completato questo mese','warn');return}
  const doc=new window.jspdf.jsPDF();
- doc.setFontSize(16);doc.text('Plancia · Statistiche '+d.mese,14,16);
- doc.autoTable({startY:24,head:[['Operatore','Settimana','Mese']],body:d.stats.map(s=>[s.nome,s.settimana,s.mese])});
- doc.autoTable({startY:doc.lastAutoTable.finalY+8,head:[['N.','Cliente','Grafico','Completato']],body:d.ordini.map(o=>[o.numero,o.cliente,o.grafico,o.completato])});
- doc.save('plancia-'+d.mese+'.pdf')}
-function downloadPDF(){pdfBuild(statsPayload())}
-function pdfFromArchive(d){pdfBuild(d)}
-function pdfCompletati(){
- const list=S.orders.filter(o=>o.status==='verificato_ok');
- const doc=new window.jspdf.jsPDF();
- doc.setFontSize(16);doc.text('Plancia · Completati verificati',14,16);
- doc.autoTable({startY:24,head:[['N.','Cliente','Grafico','Consegna']],body:list.map(o=>[o.numero,o.cliente,opName(o.grafico),fmtDE(o.consegna)])});
- doc.save('plancia-completati.pdf')}
-async function archiveMonth(){
- await sb.from('stats_archive').insert({mese:new Date().toISOString().slice(0,7),dati:statsPayload()});
- await loadAll();route();toast('Mese archiviato','ok')}
+ doc.setFontSize(16);doc.text('Dashboard Grafica · Completati del mese',14,16);
+ doc.autoTable({startY:24,head:[['N.','Cliente','Grafico','Completato']],body:list.map(o=>[o.numero,o.cliente,opName(o.grafico),fmtDT(o.completato_at)])});
+ doc.save('completati-mese.pdf');toast('PDF generato','ok')}
 
 /* ============ avvio ============ */
 boot().catch(e=>{hideLoader();document.getElementById('app').innerHTML='<div style="padding:40px;font-family:var(--mono);color:#A32E32">Errore avvio: '+e.message+'</div>';});
