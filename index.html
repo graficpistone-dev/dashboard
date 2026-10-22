@@ -362,7 +362,6 @@ async function renderLogin(){
  let st=null;try{const r=await sb.rpc('public_stats');st=r.data}catch(e){}
  $('#app').innerHTML=`<div class="loginwrap"><div class="loginbox">
  <img src="logo.png" class="loginlogo" alt="" onerror="this.style.display='none'">
- /* ============ righe ordine ============ /<h1>Dashboard <em>Grafica</em></h1> *
  <p class="sub">Smistamento ordini, task e avanzamento della squadra.</p>
  ${st?`<div class="livebar"><span class="lb"><b>${st.tot}</b> ordini in corso</span></div>`:''}
  <div class="pick"><h2>Seleziona operatore</h2>
