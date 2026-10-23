@@ -611,6 +611,12 @@ async function purgeCompletati(){
  const{error}=await sb.from('orders').delete().in('id',ids);
  if(error){toast(error.message,'err');return}
  await loadAll();route();toast('Completati rimossi dal database','ok')}
+async function resetTotale(){
+ if(!confirm('RESET TOTALE: verranno eliminati TUTTI gli ordini (di ogni stato), le task, gli appunti, le notifiche, i log, i report e i contatori caricati finora.\nUtenti, password e cancelletto 1977 restano attivi.\nContinuare?'))return;
+ if(!confirm('Conferma DEFINITIVA: l\'operazione è irreversibile.'))return;
+ const{error}=await sb.rpc('reset_totale');
+ if(error){toast('Reset fallito: '+error.message,'err');return}
+ await loadAll();route();toast('Reset totale completato: plancia vuota','ok')}
 
 /* ============ modifica ordine (doppio click) ============ */
 function editOrder(id){
@@ -1009,7 +1015,7 @@ function statsPayload(){
   ordini:S.orders.filter(o=>o.completato_at&&new Date(o.completato_at)>=ms&&new Date(o.completato_at)<me)
    .map(o=>({numero:o.numero,cliente:o.cliente,grafico:opName(o.grafico),completato:fmtDT(o.completato_at)}))}}
 async function resetTotale(){
- if(!confirm('RESET TOTALE: verranno eliminati TUTTI gli ordini, le task, gli appunti, le notifiche, i report e i contatori caricati finora.\nUtenti, password e cancelletto 1977 restano attivi.\nContinuare?'))return;
+ if(!confirm('RESET TOTALE: verranno eliminati TUTTI gli ordini (di ogni stato), le task, gli appunti, le notifiche, i log, i report e i contatori caricati finora.\nUtenti, password e cancelletto 1977 restano attivi.\nContinuare?'))return;
  if(!confirm('Conferma DEFINITIVA: l\'operazione è irreversibile.'))return;
  const{error}=await sb.rpc('reset_totale');
  if(error){toast('Reset fallito: '+error.message,'err');return}
