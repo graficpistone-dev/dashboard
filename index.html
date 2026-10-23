@@ -92,6 +92,7 @@ main{max-width:1760px;margin:0 auto;padding:0 20px 60px}
 .trayhead{background:var(--ink);color:#fff;padding:9px 14px;display:flex;align-items:center;gap:8px;font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:.04em}
 .trayhead .cnt{font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.22);border-radius:99px;padding:2px 9px}
 .trayhead.alert{background:#7A2E31}.trayhead.muted{background:#4A5158}.trayhead.prod{background:#0E5E6F}.trayhead.sosp{background:#7A5C00}
+.trayhead.oggi{background:#A32E32}.trayhead.domani{background:#7A5C00}
 .headtools{margin-left:auto;display:flex;gap:12px;align-items:center}
 .switchlabel{font-size:11px;color:#C9CED4;display:flex;gap:6px;align-items:center;cursor:pointer}
 .traybody{padding:8px;min-height:44px;max-height:46vh;overflow:auto}
@@ -151,13 +152,14 @@ td.ic{white-space:nowrap}
 .badge-ro{background:#FFF4E5;color:#B36B00;border-radius:99px;padding:4px 12px;font-size:11px;font-weight:700;letter-spacing:.06em}
 .board{display:grid;grid-template-columns:320px minmax(0,1fr);gap:16px;margin-top:16px}
 .overlay{position:fixed;inset:0;background:rgba(24,27,30,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
-.modal{background:#fff;border-radius:14px;width:min(680px,100%);max-height:86vh;overflow:auto;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+.modal{background:#fff;border-radius:14px;width:min(720px,100%);max-height:86vh;overflow:auto;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
 .modal h3{font-family:var(--disp);font-size:18px;margin-bottom:4px}.modal .sub{color:var(--muted);font-size:12.5px;margin-bottom:14px}
 .msec{margin-top:14px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .msec>header{padding:9px 13px;font-weight:600;font-size:12.5px;background:#F6F7F8}
 .msec>header.warn{background:#FFF9EC;color:#8a6100}
 .mrow{display:flex;gap:10px;align-items:center;padding:9px 13px;border-top:1px solid var(--line);font-size:13px;cursor:pointer}
 .mrow label{flex:1;display:flex;gap:9px;align-items:center;cursor:pointer}.mrow .dest{font-size:11px;color:var(--muted)}
+.mrow select{border:1px solid var(--line);border-radius:7px;padding:5px 6px;font-size:12px;background:#fff}
 .seg{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
 .seg button{border:0;background:#fff;padding:5px 11px;font-size:11.5px;font-weight:600;color:var(--muted)}
 .seg button.on{background:var(--ink);color:#fff}
@@ -223,6 +225,11 @@ const monthStart=d=>{const x=new Date(d);x.setHours(0,0,0,0);x.setDate(1);return
 const ageHours=iso=>iso?(Date.now()-new Date(iso))/36e5:0;
 const poolSort=l=>l.slice().sort((a,b)=>{if(!a.consegna&&!b.consegna)return 0;if(!a.consegna)return -1;if(!b.consegna)return 1;return new Date(a.consegna)-new Date(b.consegna)});
 const inCorso=id=>S.orders.filter(o=>o.grafico===id&&!['completato','verificato_ok','annullato','problema'].includes(o.status)).length;
+const dkey=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const satWork=()=>localStorage.getItem('dg_satwork')==='1';
+function isWorkday(d){const g=d.getDay();return satWork()?(g>=1&&g<=6):(g>=1&&g<=5)}
+function nextWorkdays(from,n){const out=[];const d=new Date(from);for(let i=0;i<60&&out.length<n;i++){d.setDate(d.getDate()+1);if(isWorkday(d))out.push(new Date(d))}return out}
+const cap=s=>s?s.charAt(0).toUpperCase()+s.slice(1):s;
 function toast(msg,type=''){const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;$('#toasts').append(t);setTimeout(()=>t.remove(),5000)}
 function showModal(html){$('#modal-root').innerHTML=`<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="modal">${html}</div></div>`}
 function closeModal(){$('#modal-root').innerHTML=''}
@@ -300,7 +307,7 @@ function rowPayload(r){
 function renderGate(){
  hideLoader();
  $('#app').innerHTML=`<div class="loginwrap"><div class="gatebox">
- <div class="gatelock">:)</div>
+ <div class="gatelock">🔒</div>
  <small style="letter-spacing:.14em;text-transform:uppercase">Accesso riservato</small>
  <input id="gate-pw" type="password" inputmode="numeric" placeholder="••••" autocomplete="new-password"
   onkeydown="if(event.key==='Enter')checkGate()">
@@ -456,6 +463,49 @@ const HEAD_POOL='<th style="width:92px">N.</th><th>Cliente</th><th style="width:
 const HEAD_LANE='<th style="width:92px">N.</th><th>Cliente</th><th style="width:112px">Consegna</th><th style="width:100px">Stato</th><th style="width:34px"></th>';
 const HEAD_OP='<th style="width:92px">N.</th><th>Cliente</th><th style="width:112px">Consegna</th><th style="width:56px">Rev</th><th style="width:132px"></th>';
 const HEAD_SPEC='<th style="width:92px">N.</th><th>Cliente</th><th style="width:110px">Operatore</th><th style="width:112px">Consegna</th><th style="width:34px"></th>';
+const HEAD_CONS='<th style="width:92px">N.</th><th>Cliente</th><th style="width:120px">Consegna</th><th style="width:250px">Situazione</th><th style="width:100px">Settore</th><th>Note</th><th style="width:34px"></th>';
+
+/* ============ VISTA CONSEGNE ============ */
+function situazione(o){
+ if(o.status==='da_assegnare')return `<span class="chip st" style="background:#6E7681">Da smistare</span>${o.motivo_rifiuto?' <span class="flag rif">rifiutato</span>':''}${o.scadenza_tempo?' <span class="flag tempo">⏱ tempo</span>':''}`;
+ if(o.status==='in_accettazione')return `<span class="chip st" style="background:#04A29C">In accettazione · ${esc(opName(o.grafico))}</span>`;
+ if(o.status==='sospeso')return `<span class="chip st" style="background:#8A6100">Sospeso · ${esc(opName(o.grafico)||'—')}</span>`;
+ if(o.status==='problema')return `<span class="chip st" style="background:#E5484D">Problema · ${esc(opName(o.grafico)||'—')}</span>`;
+ const st=ALLSTATI[o.status];
+ return `<span class="chip" style="background:${opColor(o.grafico)}22;color:${opColor(o.grafico)}">${esc(opName(o.grafico))}</span> <span class="chip st" style="background:${st.c}">${st.l}</span>`}
+function rowConsegna(o){
+ return `<tr ondblclick="editOrder('${o.id}')" title="Doppio click: modifica/assegna">
+ <td class="nowrap mono">${o.tassativo?'<span class="star">★</span> ':''}#${esc(o.numero)}</td>
+ <td><div class="clicell" title="${esc(o.cliente)}">${esc(o.cliente)}</div></td>
+ <td class="nowrap">${fmtDE(o.consegna)}${o.tassativo?` <span class="chip">${o.consegna_ora||'18:00'}</span>`:''}</td>
+ <td class="nowrap">${situazione(o)}</td>
+ <td class="nowrap">${esc(o.settore||'—')}</td>
+ <td class="mutedcell">${esc(trunc(o.commento,46))}</td>
+ <td class="ic"><button class="info" onclick="showLog('${o.id}')">i</button></td></tr>`}
+function consegnaData(){
+ const today=new Date();today.setHours(0,0,0,0);
+ const active=S.orders.filter(o=>o.consegna&&!['annullato','completato','verificato_ok'].includes(o.status));
+ const late=poolSort(active.filter(o=>new Date(o.consegna+'T00:00:00')<today));
+ const days=[today,...nextWorkdays(today,3)];
+ const secs=days.map((d,i)=>({d,i,items:active.filter(o=>o.consegna===dkey(d))
+  .sort((a,b)=>(b.tassativo?1:0)-(a.tassativo?1:0)||String(a.numero).localeCompare(String(b.numero)))}));
+ return{late,secs}}
+function consegneCount(){const{late,secs}=consegnaData();return late.length+secs.reduce((n,s)=>n+s.items.length,0)}
+function setSatWork(v){localStorage.setItem('dg_satwork',v?'1':'0');route()}
+function renderConsegne(){
+ const{late,secs}=consegnaData();
+ let html=`<div style="display:flex;gap:18px;align-items:center;margin:16px 0 14px;flex-wrap:wrap">
+ <label style="display:flex;gap:7px;align-items:center;font-size:12px;color:var(--muted);cursor:pointer">
+ <input type="checkbox" ${satWork()?'checked':''} onchange="setSatWork(this.checked)"> sabato considerato lavorativo</label>
+ <span style="font-size:12px;color:var(--muted)">Doppio click su una riga = modifica o assegna · ★ = tassativo</span></div>`;
+ if(late.length)html+=`<div class="tray"><div class="trayhead alert">⚠ In ritardo · consegna passata<span class="cnt">${late.length}</span></div>
+ <div class="traybody">${tablePlain(late.map(rowConsegna).join(''),HEAD_CONS)}</div></div>`;
+ html+=secs.map(s=>{
+  const lbl=s.i===0?'Oggi':s.i===1?'Domani':cap(s.d.toLocaleDateString('it-IT',{weekday:'long'}));
+  const cls=s.i===0?'oggi':s.i===1?'domani':'';
+  return `<div class="tray"><div class="trayhead ${cls}">${lbl} · ${s.d.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'})}<span class="cnt">${s.items.length}</span></div>
+  <div class="traybody">${s.items.length?tablePlain(s.items.map(rowConsegna).join(''),HEAD_CONS):'<div class="empty">Nessuna consegna in questo giorno</div>'}</div></div>`}).join('');
+ return html}
 
 /* ============ ADMIN ============ */
 function setTab(t){S.tab=t;route()}
@@ -464,8 +514,10 @@ function setTaskFilter(f){S.taskFilter=f;route()}
 function renderAdmin(){
  const last=S.meta['ultimo_import'];
  const center=`<div class="clockbox"><small>Ultimo caricamento ordini</small>${last?`<b class="mono">${fmtDT(last)}</b><em>${rel(last)}</em>`:'<b class="none">Nessun caricamento</b>'}</div>`;
- const tabs=[['ordini','Ordini'],['stats','Statistiche']].map(x=>`<button class="tab ${S.tab===x[0]?'on':''}" onclick="setTab('${x[0]}')">${x[1]}</button>`).join('');
- $('#app').innerHTML=topbar(center)+`<div class="tabs">${tabs}</div><main>${S.tab==='ordini'?adminOrdini():adminStats()}</main>`}
+ const nc=consegneCount();
+ const tabs=[['ordini','Ordini'],['consegne','Consegne'+(nc?' ('+nc+')':'')],['stats','Statistiche']].map(x=>`<button class="tab ${S.tab===x[0]?'on':''}" onclick="setTab('${x[0]}')">${x[1]}</button>`).join('');
+ const body=S.tab==='ordini'?adminOrdini():S.tab==='consegne'?renderConsegne():adminStats();
+ $('#app').innerHTML=topbar(center)+`<div class="tabs">${tabs}</div><main>${body}</main>`}
 function taskSide(){
  const all=S.tasks.filter(t=>!t.privata);
  const open=all.filter(t=>t.stato==='aperta');
@@ -540,7 +592,8 @@ function adminStats(){
  <div style="display:flex;gap:10px;flex-wrap:wrap">
  <button class="btn pri" onclick="pdfCompletatiMese()">⇓ PDF completati del mese</button>
  <button class="btn" onclick="zeroCounters()">Azzera contatori</button>
- <button class="btn danger" onclick="purgeReports()">🗑 Elimina tutti i report</button></div></div>`}
+ <button class="btn danger" onclick="purgeReports()">🗑 Elimina tutti i report</button>
+ <button class="btn danger" onclick="resetTotale()">☢ Reset totale dati</button></div></div>`}
 async function zeroCounters(){
  if(!confirm('Azzerare i contatori settimana/mese di tutti i grafici? Viene salvato uno snapshot nell\'archivio report.'))return;
  await sb.from('stats_archive').insert({mese:new Date().toISOString().slice(0,7),dati:statsPayload()});
@@ -840,11 +893,14 @@ async function togglePriv(id){
 
 /* ============ import CSV ============ */
 let IMPORT=null;
-function handleFile(file){if(!file)return;Papa.parse(file,{skipEmptyLines:true,complete:r=>prepareImport(r.data)})}
-async function prepareImport(data){
+function handleFile(file){if(!file)return;Papa.parse(file,{skipEmptyLines:true,complete:r=>prepareImport(r.data,file.name)})}
+async function prepareImport(data,fname){
  const{rows,skipped}=rowsFromFile(data);
  await loadAll();
+ const fonte=/grafici/i.test(fname||'')?'grafici':'clienti';
  const existing=new Map(S.orders.map(o=>[o.numero+'|'+(o.data_ordine||''),o]));
+ const fileKeys=new Set(rows.map(r=>r.numero+'|'+(r.data||'')));
+ const missing=S.orders.filter(o=>o.fonte===fonte&&!['annullato','verificato_ok'].includes(o.status)&&!fileKeys.has(o.numero+'|'+(o.data_ordine||'')));
  const nuovi=[],gia=[],danea=[],ann=[];
  for(const r of rows){
   const key=r.numero+'|'+(r.data||'');const ex=existing.get(key);
@@ -853,10 +909,10 @@ async function prepareImport(data){
   if(!ex){(st==='annullato'?ann:nuovi).push(Object.assign({},r,{grafico:graf,st:st,dest:dest}))}
   else{if(ex.status==='completato'||ex.status==='verificato_ok')danea.push(Object.assign({},r,{ex:ex}));
    gia.push(Object.assign({},r,{ex:ex,choice:'skip'}))}}
- IMPORT={nuovi:nuovi,gia:gia,danea:danea,ann:ann,skipped:skipped};
+ IMPORT={nuovi:nuovi,gia:gia,danea:danea,ann:ann,skipped:skipped,missing:missing,fonte:fonte};
  showImportModal()}
 function showImportModal(){
- const nuovi=IMPORT.nuovi,gia=IMPORT.gia,danea=IMPORT.danea,ann=IMPORT.ann,skipped=IMPORT.skipped;
+ const nuovi=IMPORT.nuovi,gia=IMPORT.gia,danea=IMPORT.danea,ann=IMPORT.ann,skipped=IMPORT.skipped,miss=IMPORT.missing||[];
  const secN=nuovi.length?`<div class="msec"><header>① Nuovi lavori da aggiungere (${nuovi.length})</header>
  ${nuovi.map((r,i)=>`<div class="mrow" style="cursor:default"><label><input type="checkbox" checked data-nuovo="${i}">
  <span>#${esc(r.numero)} · ${esc(r.cliente)}${/TASSATIV/i.test(r.commento||'')?' <span class="star">★</span>':''}<br><span class="dest">→ ${esc(r.dest)}</span></span></label></div>`).join('')}</div>`:'';
@@ -868,24 +924,68 @@ function showImportModal(){
  <span class="seg"><button data-gia="${i}" data-c="skip" class="on">Ignora</button><button data-gia="${i}" data-c="overwrite">Sovrascrivi</button></span></div>`).join('')}</div>`:'';
  const secD=danea.length?`<div class="msec"><header class="warn">⚠ Verifica Danea (${danea.length})</header>
  ${danea.map(r=>`<div class="mrow" style="cursor:default"><span>#${esc(r.numero)} · ${esc(r.cliente)}<br><span class="dest">In dashboard è <b>completato</b>, nel file risulta ancora attivo. Verifica e correggi Danea.</span></span></div>`).join('')}</div>`:'';
- showModal(`<h3>Anteprima importazione</h3><p class="sub">Controlla prima di scrivere nel database. ${skipped?'Ignorate '+skipped+' righe tecniche.':''}</p>
- ${secN}${secA}${secG}${secD}
- <div class="mfoot"><button class="btn" onclick="closeModal()">Annulla</button><button class="btn pri" onclick="confirmImport()">Conferma importazione</button></div>`)}
+ const secM=miss.length?`<div class="msec"><header class="warn">④ Non presenti in questo file (${miss.length}) — in dashboard risultano attivi</header>
+ ${miss.map((o,i)=>`<div class="mrow" style="cursor:default"><span style="flex:1">#${esc(o.numero)} · ${esc(o.cliente)}<br>
+ <span class="dest">Stato attuale: ${ALLSTATI[o.status]?ALLSTATI[o.status].l:o.status}${o.grafico?' · '+esc(opName(o.grafico)):''}</span></span>
+ <select data-miss="${i}">
+  <option value="">Lascia invariato</option>
+  <option value="da_assegnare">→ Da smistare</option>
+  <option value="da_iniziare">→ Da iniziare</option>
+  <option value="bozza_inviata">→ Bozza inviata</option>
+  <option value="modifiche">→ Modifiche</option>
+  <option value="da_produrre">→ Da produrre</option>
+  <option value="completato">→ Completato</option>
+  <option value="verificato_ok">→ Completato verificato</option>
+  <option value="sospeso">→ Sospeso</option>
+  <option value="annullato">→ Annullato</option>
+ </select></div>`).join('')}</div>`:'';
+ showModal(`<h3>Anteprima importazione</h3><p class="sub">File: ${esc(IMPORT.fonte==='grafici'?'Ordini cliente - Grafici':'Ordini cliente')} · ${skipped?'Ignorate '+skipped+' righe tecniche.':''}</p>
+ ${secN}${secA}${secG}${secD}${secM}
+ <div class="mfoot"><button class="btn" onclick="closeModal()">Annulla</button><button class="btn pri" onclick="confirmImport()">Conferma importazione</button></div>`);
+ document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{
+  const i=b.dataset.gia;IMPORT.gia[i].choice=b.dataset.c;
+  b.parentElement.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on')});
+ noAutocomplete()}
 async function confirmImport(){
  const selN=[...document.querySelectorAll('[data-nuovo]:checked')].map(x=>+x.dataset.nuovo);
  const selA=[...document.querySelectorAll('[data-ann]:checked')].map(x=>+x.dataset.ann);
  const rows=selN.map(i=>IMPORT.nuovi[i]).concat(selA.map(i=>IMPORT.ann[i]));
- let added=0,over=0;
+ let added=0,over=0,miss=0;
  for(const r of rows){
-  const{error}=await sb.from('orders').insert(rowPayload(r));
+  const payload=Object.assign(rowPayload(r),{fonte:IMPORT.fonte});
+  const{error}=await sb.from('orders').insert(payload);
   if(error)toast('#'+r.numero+' — '+error.message,'err');else added++}
  for(const r of IMPORT.gia){
+  if(r.choice==='skip'){await sb.from('orders').update({fonte:IMPORT.fonte}).eq('id',r.ex.id);continue}
   if(r.choice!=='overwrite')continue;
-  const{error}=await sb.from('orders').update({cliente:r.cliente,consegna:r.consegna,commento:r.commento,settore:r.settore,dettagli:buildDettagli(r),tassativo:/TASSATIV/i.test(r.commento||'')}).eq('id',r.ex.id);
-  if(!error)over++}
+  const st=importStatus(r),graf=matchGrafico(r.graficoRaw);
+  const patch={cliente:r.cliente,consegna:r.consegna,commento:r.commento,settore:r.settore,
+   dettagli:buildDettagli(r),tassativo:/TASSATIV/i.test(r.commento||''),fonte:IMPORT.fonte};
+  const protetto=['completato','verificato_ok'].includes(r.ex.status);
+  if(!protetto){
+   patch.status=st;patch.grafico=graf;
+   if(st==='da_assegnare'){patch.grafico=null;patch.assegnato_at=null}
+   if(['da_iniziare','bozza_inviata','modifiche','da_produrre','completato'].includes(st)&&!r.ex.accettato_at)patch.accettato_at=new Date().toISOString();
+   if(st==='completato'&&!r.ex.completato_at)patch.completato_at=new Date().toISOString()}
+  const{error}=await sb.from('orders').update(patch).eq('id',r.ex.id);
+  if(error){toast('#'+r.numero+' — '+error.message,'err');continue}
+  await sb.from('order_events').insert({order_id:r.ex.id,attore:S.prof.id,
+   azione:'sovrascritto da import CSV'+(protetto?' (stato protetto: era completato)':'')});
+  over++}
+ for(const selEl of [...document.querySelectorAll('[data-miss]')]){
+  const v=selEl.value;if(!v)continue;
+  const o=IMPORT.missing[+selEl.dataset.miss];if(!o)continue;
+  const patch={status:v};
+  if(v==='da_assegnare'){patch.grafico=null;patch.assegnato_at=null;patch.motivo_rifiuto=null;patch.scadenza_tempo=false}
+  if(v==='completato'&&!o.completato_at)patch.completato_at=new Date().toISOString();
+  if(v==='verificato_ok')patch.esito_verifica='ok';
+  const{error}=await sb.from('orders').update(patch).eq('id',o.id);
+  if(error){toast('#'+o.numero+' — '+error.message,'err');continue}
+  await sb.from('order_events').insert({order_id:o.id,attore:S.prof.id,azione:'stato → '+v+' (non presente nel file CSV)'});
+  miss++}
  await sb.from('meta').upsert({chiave:'ultimo_import',valore:new Date().toISOString(),aggiornato_il:new Date().toISOString()});
  closeModal();await loadAll();route();
- toast('Import completato: '+added+' caricati · '+over+' sovrascritti','ok')}
+ toast('Import: '+added+' nuovi · '+over+' sovrascritti · '+miss+' aggiornati da elenco','ok')}
 
 /* ============ countdown ============ */
 let cdTimer=null;
@@ -908,6 +1008,12 @@ function statsPayload(){
   stats:operators().map(o=>({nome:o.display_name,settimana:countFor(o.id,ws,we),mese:countFor(o.id,ms,me)})),
   ordini:S.orders.filter(o=>o.completato_at&&new Date(o.completato_at)>=ms&&new Date(o.completato_at)<me)
    .map(o=>({numero:o.numero,cliente:o.cliente,grafico:opName(o.grafico),completato:fmtDT(o.completato_at)}))}}
+async function resetTotale(){
+ if(!confirm('RESET TOTALE: verranno eliminati TUTTI gli ordini, le task, gli appunti, le notifiche, i report e i contatori caricati finora.\nUtenti, password e cancelletto 1977 restano attivi.\nContinuare?'))return;
+ if(!confirm('Conferma DEFINITIVA: l\'operazione è irreversibile.'))return;
+ const{error}=await sb.rpc('reset_totale');
+ if(error){toast('Reset fallito: '+error.message,'err');return}
+ await loadAll();route();toast('Reset totale completato: plancia vuota','ok')}
 function pdfCompletatiMese(){
  const ms=monthStart(new Date()),me=new Date(ms);me.setMonth(me.getMonth()+1);
  const list=S.orders.filter(o=>o.completato_at&&new Date(o.completato_at)>=ms&&new Date(o.completato_at)<me);
